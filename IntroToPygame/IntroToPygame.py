@@ -29,7 +29,7 @@ rectY = 288
 rectSpeed = 1
 
 # spawn and initialize a new enemy
-newEnemy = Enemy(Vector(288, 288), Vector(1, 1), 30)
+#newEnemy = Enemy(Vector(288, 288), Vector(1, 1), 30)
 
 # game loop
 while True:
@@ -54,8 +54,8 @@ while True:
 	pygame.draw.rect(screen, pygame.Color(0, 255, 0, 255), pygame.Rect(rectX, rectY, 25 ,25), 0)
 	
 	# update position of and draw enemy square
-	newEnemy.update()
-	newEnemy.draw(screen)
+	#newEnemy.update()
+	#newEnemy.draw(screen)
 
 	# update display and erase residue of this frame before drawing the next
 	pygame.display.update()

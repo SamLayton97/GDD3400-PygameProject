@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "IntroToPygame", "IntroToPygame\IntroToPygame.pyproj", "{D6531ABC-7883-4F4A-8ECE-0A5A7B8476A8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6531ABC-7883-4F4A-8ECE-0A5A7B8476A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6531ABC-7883-4F4A-8ECE-0A5A7B8476A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EA244C8D-DAF4-4BD1-9302-B4C0F5FE0308}
+	EndGlobalSection
+EndGlobal

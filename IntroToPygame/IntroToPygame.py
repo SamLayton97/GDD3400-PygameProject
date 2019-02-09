@@ -3,12 +3,13 @@ import pygame
 from pygame.locals import *
 pygame.init()
 
-# import custom Vector and Enemy classes
+# import custom scripts and classes
+import Constants
 from Vector import *
 from Enemy import *
 
 # set display
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT))
 pygame.display.set_caption("Intro to Pygame")
 
 # retrieve framerate of game
@@ -35,8 +36,8 @@ while True:
 	# respond to in-game events
 	EventHandler()
 			
-	# lock framerate to 60 fps
-	framerate.tick(60)
+	# lock framerate
+	framerate.tick(Constants.FRAME_RATE)
 
 	# move player-square using WASD
 	pressed = pygame.key.get_pressed()
@@ -58,4 +59,4 @@ while True:
 
 	# update display and erase residue of this frame before drawing the next
 	pygame.display.update()
-	screen.fill((100, 149, 237))
+	screen.fill(Constants.BACKGROUND_COLOR)

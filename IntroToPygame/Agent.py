@@ -13,6 +13,7 @@ class Agent:
 	speed = 0
 	objectCenter = Vector(0, 0)
 	color = (0, 0, 0)
+	collisionBox = pygame.Rect(position.numerator, position.denominator, size, size)
 
 	# Constructor:
 	# Initializes agent's starting position,
@@ -28,6 +29,7 @@ class Agent:
 		# initialize speed and calculate agent's center in world coordinates
 		self.velocity = Vector(0, 0)
 		self.objectCenter = Vector(position.numerator + (size / 2), position.denominator + (size / 2))
+		self.collisionBox = pygame.Rect(self.position.numerator, self.position.denominator, self.size, self.size)
 
 	# Prints agent's size, position, velocity, and
 	# center (in world coordinates) for debugging
@@ -41,15 +43,24 @@ class Agent:
 	# Draws agents and its velocity at a given position on screen
 	def draw(self, screen):
 		# draw self
-		pygame.draw.rect(screen, self.color, pygame.Rect(self.position.numerator, self.position.denominator, self.size, self.size), 0)
+		pygame.draw.rect(screen, self.color, self.collisionBox, 0)
 
 		# for debugging: draw line pointing in direction of agent's velocity
 		drawVector = self.velocity.scale(self.size)
 		pygame.draw.line(screen, pygame.Color(0, 0, 255, 255), (self.objectCenter.numerator, self.objectCenter.denominator), 
 				   (self.objectCenter.numerator + drawVector.numerator, self.objectCenter.denominator + drawVector.denominator), 4)
 
-	# Updates agent's position according to its velocity
+	# Updates agent's position and collision box
 	def update(self):
+		# apply speed-scaled velocity to agent's position
 		displacementVector = self.velocity.scale(self.speed)
 		self.position += displacementVector
 		self.objectCenter += displacementVector
+
+		# calculate agent's collision box
+		self.collisionBox = pygame.Rect(self.position.numerator, self.position.denominator, self.size, self.size)
+
+	# Detects collisions between player and enemy agents,
+	# and alters agents behaviors upon collision
+	def colliderect():
+		print("Collision")

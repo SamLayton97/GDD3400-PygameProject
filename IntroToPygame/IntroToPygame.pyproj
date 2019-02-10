@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Agent.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Constants.py">
       <SubType>Code</SubType>
     </Compile>

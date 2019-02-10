@@ -3,19 +3,37 @@ import pygame
 from pygame.locals import *
 pygame.init()
 
-# Common base for all enemies
+# Basic enemy agent with seek-flee capabilities
 class Enemy:
 
 	# public variables
 	position = Vector(0, 0)
 	velocity = Vector(0, 0)
 	size = 0
-
-	# constructor
-	def __init__(self, position, velocity, size):
+	speed = 0
+	objectCenter = Vector(0, 0)
+	
+	# Constructor:
+	# Initializes agent's starting position,
+    # size, and speed according to parameters, and 
+    # initializes their velocity and center from that.
+	def __init__(self, position, size, speed):
+		# set position, size, and speed to parameters
 		self.position = position
-		self.velocity = velocity
 		self.size = size
+		self.speed = speed
+
+		# initialize velocity to 0 and calculate center of agent in world coordinates
+		self.velocity = Vector(0, 0)
+		self.objectCenter = Vector(position.numerator + (size / 2), position.denominator + (size / 2))
+
+	# Prints agent's size, position, velocity, and
+	# center (in world coordinates) for debugging
+	def __str__(self):
+		print("Size: " + str(self.size))
+		print("Position: (" + str(self.position.numerator) + ", " + str(self.position.denominator) + ")\n")
+		print("Velocity: (" + str(self.velocity.numerator) + ", " + str(self.velocity.denominator) + ")\n")
+		print("Center: (" + str(self.objectCenter.numerator) + ", " + str(self.objectCenter.denominator) + ")\n")
 
 	# draws enemy at a given position on the screen
 	def draw(self, screen):

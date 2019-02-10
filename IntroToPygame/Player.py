@@ -30,11 +30,10 @@ class Player:
     # Prints player's size, position, velocity, and
     # center (in world coordinates) for debugging
     def __str__(self):
-        print("Player Info:\n")
         print("Size: " + str(self.size))
-        print("Position: (" + self.position.numerator + ", " + self.position.denominator + ")\n")
-        print("Velocity: (" + self.velocity.numerator + ", " + self.velocity.denominator + ")\n")
-        print("Center: (" + self.objectCenter.numerator + ", " + self.objectCenter.denominator + ")\n")
+        print("Position: (" + str(self.position.numerator) + ", " + str(self.position.denominator) + ")\n")
+        print("Velocity: (" + str(self.velocity.numerator) + ", " + str(self.velocity.denominator) + ")\n")
+        print("Center: (" + str(self.objectCenter.numerator) + ", " + str(self.objectCenter.denominator) + ")\n")
 
     # Draws colored square on screen representing player
     # and line representing their velocity

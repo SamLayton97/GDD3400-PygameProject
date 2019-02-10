@@ -42,7 +42,7 @@ while True:
 
 	# update and draw enemy
 	newEnemy.update(myPlayer)
-	newEnemy.draw(screen)
+	newEnemy.draw(screen, myPlayer)
 
 	# update display and erase residue of current frame before drawing next
 	pygame.display.update()

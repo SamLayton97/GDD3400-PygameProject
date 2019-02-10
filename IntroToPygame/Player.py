@@ -7,11 +7,11 @@ pygame.init()
 class Player:
 
     # public variables
-    position
-    velocity
-    size
-    speed
-    objectCenter
+    position = Vector(0, 0)
+    velocity = Vector(0, 0)
+    size = 0
+    speed = 0
+    objectCenter = Vector(0, 0)
 
     # Constructor:
     # Initializes player agent's starting position,
@@ -41,3 +41,28 @@ class Player:
     def draw(self, screen):
         # draw self
         pygame.draw.rect(screen, pygame.Color(0, 255, 0, 255), pygame.Rect(self.position.numerator, self.position.denominator, self.size, self.size), 0)
+
+        # for debugging, draw line representing player's velocity
+        pygame.draw.line(screen, pygame.Color(255, 0, 0, 255), (self.objectCenter.numerator, self.objectCenter.denominator), 
+				   (self.objectCenter.numerator + self.velocity.numerator, self.objectCenter.denominator + (self.size / 2) + self.velocity.denominator), 4)
+
+    # Moves player-object in response to player-input (WASD),
+    # and updates velocity vector accordingly
+    def update(self):
+        # determine un-normalized movement vector according to player-input
+        xInput = 0
+        yInput = 0
+        pressed = pygame.key.get_pressed()
+        if pressed[K_w]:
+            yInput = -1
+        elif pressed[K_s]:
+            yInput = 1
+        if pressed[K_a]:
+            xInput = -1
+        elif pressed[K_d]:
+            xInput = 1
+
+        # move player in direction of normalized velocity, scaled up by their speed
+        movementVector = Vector(xInput, yInput)
+        self.velocity = movementVector.normalize()
+        self.position += self.velocity.scale(self.speed)

@@ -40,7 +40,7 @@ while True:
 
     # update and draw player
     myPlayer.update()
-    myPlayer.draw()
+    myPlayer.draw(screen)
 
     # update position of and draw enemy square
 	#newEnemy.update()

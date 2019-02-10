@@ -27,6 +27,4 @@ class Player(Agent):
         if xInput != 0 or yInput != 0:
             movementVector = Vector(xInput, yInput)
             self.velocity = movementVector.normalize()
-            displacementVector = self.velocity.scale(self.speed)
-            self.position += displacementVector
-            self.objectCenter += displacementVector
+            super().update()

@@ -47,3 +47,9 @@ class Agent:
 		drawVector = self.velocity.scale(self.size)
 		pygame.draw.line(screen, pygame.Color(0, 0, 255, 255), (self.objectCenter.numerator, self.objectCenter.denominator), 
 				   (self.objectCenter.numerator + drawVector.numerator, self.objectCenter.denominator + drawVector.denominator), 4)
+
+	# Updates agent's position according to its velocity
+	def update(self):
+		displacementVector = self.velocity.scale(self.speed)
+		self.position += displacementVector
+		self.objectCenter += displacementVector

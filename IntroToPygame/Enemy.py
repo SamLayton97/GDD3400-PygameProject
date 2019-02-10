@@ -14,6 +14,4 @@ class Enemy(Agent):
 		# if target is within attack range, follow it
 		if distToTarget < Constants.ATTACK_RANGE:
 			self.velocity = directionToTarget.normalize()
-			displacementVector = self.velocity.scale(self.speed)
-			self.position += displacementVector
-			self.objectCenter += displacementVector
+			super().update()

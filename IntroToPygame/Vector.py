@@ -23,7 +23,7 @@ class Vector:
 		return Vector(deltaX, deltaY)
 
 	# subtracts other vector from this vector
-	def __subtract__(self, other):
+	def __sub__(self, other):
 		deltaX = self.numerator - other.numerator
 		deltaY = self.denominator - other.numerator
 		return Vector(deltaX, deltaY)

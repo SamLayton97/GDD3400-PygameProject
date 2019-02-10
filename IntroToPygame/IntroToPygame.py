@@ -24,28 +24,26 @@ def EventHandler():
 			pygame.quit()
 			quit()
 
-# spawn and initialize player on center-screen
+# spawn player and enemy
 myPlayer = Player(Vector(Constants.WORLD_WIDTH / 2, Constants.WORLD_HEIGHT / 2), Constants.PLAYER_SIZE, Constants.PLAYER_SPEED)
-
-# spawn and initialize a new enemy
-#newEnemy = Enemy(Vector(288, 288), Vector(1, 1), 30)
+newEnemy = Enemy(Vector(100, 100), Constants.ENEMY_SIZE, Constants.ENEMY_SPEED)
 
 # game loop
 while True:
-    # respond to in-game events
-    EventHandler()
+	# respond to in-game events
+	EventHandler()
 
-    # lock framerate
-    framerate.tick(Constants.FRAME_RATE)
+	# lock framerate
+	framerate.tick(Constants.FRAME_RATE)
 
-    # update and draw player
-    myPlayer.update()
-    myPlayer.draw(screen)
+	# update and draw player
+	myPlayer.update()
+	myPlayer.draw(screen)
 
-    # update position of and draw enemy square
-	#newEnemy.update()
-	#newEnemy.draw(screen)
+	# update and draw enemy
+	newEnemy.update(myPlayer)
+	newEnemy.draw(screen)
 
-    # update display and erase residue of current frame before drawing next
-    pygame.display.update()
-    screen.fill(Constants.BACKGROUND_COLOR)
+	# update display and erase residue of current frame before drawing next
+	pygame.display.update()
+	screen.fill(Constants.BACKGROUND_COLOR)

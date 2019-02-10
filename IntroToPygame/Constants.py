@@ -9,3 +9,8 @@ BACKGROUND_COLOR = (100, 149, 237)
 # define player constants
 PLAYER_SIZE = 30
 PLAYER_SPEED = 5.5
+
+# define enemy constants
+ENEMY_SIZE = 20
+ENEMY_SPEED = 5
+ATTACK_RANGE = 200

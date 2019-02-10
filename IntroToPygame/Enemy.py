@@ -19,7 +19,7 @@ class Enemy(Agent):
 		super().draw(screen)
 
 	# Updates enemy's position, following target object if within attack range
-	def update(self, target):
+	def update(self, target, worldBounds):
 		# if enemy is "it", calculate direction vector towards target
 		if self.isIt:
 			directionVector = target.position - self.position
@@ -31,4 +31,4 @@ class Enemy(Agent):
 		distToTarget = directionVector.length()
 		if distToTarget < Constants.ATTACK_RANGE:
 			self.velocity = directionVector.normalize()
-			super().update(target)
+			super().update(target, worldBounds)

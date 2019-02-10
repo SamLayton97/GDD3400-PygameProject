@@ -36,12 +36,11 @@ while True:
 	# lock framerate
 	framerate.tick(Constants.FRAME_RATE)
 
-	# update and draw player
-	myPlayer.update(newEnemy)
+	# update and draw player and enemy
+	worldBounds = Vector(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT)
+	myPlayer.update(newEnemy, worldBounds)
 	myPlayer.draw(screen)
-
-	# update and draw enemy
-	newEnemy.update(myPlayer)
+	newEnemy.update(myPlayer, worldBounds)
 	newEnemy.draw(screen, myPlayer)
 
 	# update display and erase residue of current frame before drawing next

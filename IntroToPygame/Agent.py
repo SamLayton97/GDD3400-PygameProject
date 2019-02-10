@@ -52,9 +52,18 @@ class Agent:
 				   (self.objectCenter.numerator + drawVector.numerator, self.objectCenter.denominator + drawVector.denominator), 4)
 
 	# Updates agent's position and collision box
-	def update(self, target):
-		# apply speed-scaled velocity to agent's position
+	def update(self, target, worldBounds):
+		# calculate displacement of agent between frames
 		displacementVector = self.velocity.scale(self.speed)
+
+		# clamp displacement vector to within world bounds
+		futureX = displacementVector.numerator + self.position.numerator
+		futureY = displacementVector.denominator + self.position.denominator
+		if (futureX < 0) or (futureX + self.size > worldBounds.numerator):
+			displacementVector.numerator = 0
+		if (futureY < 0) or (futureY + self.size > worldBounds.denominator):
+			displacementVector.denominator = 0
+
 		self.position += displacementVector
 		self.objectCenter += displacementVector
 
@@ -68,4 +77,4 @@ class Agent:
 		# if agent collides with another, swap between seek-flee behaviors
 		if self.collisionBox.colliderect(other.collisionBox) == True:
 			self.isIt = not self.isIt
-			print(str(self.isIt))
+			print("Tag!")

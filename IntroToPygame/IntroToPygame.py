@@ -37,7 +37,7 @@ while True:
 	framerate.tick(Constants.FRAME_RATE)
 
 	# update and draw player
-	myPlayer.update()
+	myPlayer.update(newEnemy)
 	myPlayer.draw(screen)
 
 	# update and draw enemy

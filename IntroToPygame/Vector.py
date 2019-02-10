@@ -25,7 +25,7 @@ class Vector:
 	# subtracts other vector from this vector
 	def __sub__(self, other):
 		deltaX = self.numerator - other.numerator
-		deltaY = self.denominator - other.numerator
+		deltaY = self.denominator - other.denominator
 		return Vector(deltaX, deltaY)
 
 	# calculates dot product of this and another vector
@@ -38,7 +38,7 @@ class Vector:
 
 	# returns length of the vector
 	def length(self):
-		return math.sqrt(self.numerator ** 2 + self.denominator ** 2)
+		return math.sqrt((self.numerator ** 2) + (self.denominator ** 2))
 
 	# returns a normalized vector with same direction as this one
 	def normalize(self):

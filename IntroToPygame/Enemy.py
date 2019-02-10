@@ -31,10 +31,11 @@ class Enemy:
 	# Prints agent's size, position, velocity, and
 	# center (in world coordinates) for debugging
 	def __str__(self):
-		print("Size: " + str(self.size))
-		print("Position: (" + str(self.position.numerator) + ", " + str(self.position.denominator) + ")\n")
-		print("Velocity: (" + str(self.velocity.numerator) + ", " + str(self.velocity.denominator) + ")\n")
-		print("Center: (" + str(self.objectCenter.numerator) + ", " + str(self.objectCenter.denominator) + ")\n")
+		stringSize = "Size: " + str(self.size) + "\n"
+		stringPosition = "Position: (" + str(self.position.numerator) + ", " + str(self.position.denominator) + ")\n"
+		stringVelocity = "Velocity: (" + str(self.velocity.numerator) + ", " + str(self.velocity.denominator) + ")\n"
+		stringCenter = "Center: (" + str(self.objectCenter.numerator) + ", " + str(self.objectCenter.denominator) + ")\n"
+		return stringSize + stringPosition + stringVelocity + stringCenter
 
 	# Draws enemy and its velocity at a given position on the screen
 	def draw(self, screen):
@@ -54,7 +55,7 @@ class Enemy:
 
 		# if target is within attack range, follow it
 		if distToTarget < Constants.ATTACK_RANGE:
-			# apply normalized movement vector, scaled to  speed, to current position
 			self.velocity = directionToTarget.normalize()
-			self.position += self.velocity.scale(self.speed)
-			self.objectCenter += self.velocity.scale(self.speed)
+			displacementVector = self.velocity.scale(self.speed)
+			self.position += displacementVector
+			self.objectCenter += displacementVector

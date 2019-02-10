@@ -14,7 +14,7 @@ class Agent:
 	objectCenter = Vector(0, 0)
 	color = (0, 0, 0)
 	collisionBox = pygame.Rect(position.numerator, position.denominator, size, size)
-	aiSeekPlayer = True
+	isIt = True
 
 	# Constructor:
 	# Initializes agent's starting position,
@@ -67,4 +67,5 @@ class Agent:
 	def collisionDetect(self, other):
 		# if agent collides with another, swap between seek-flee behaviors
 		if self.collisionBox.colliderect(other.collisionBox) == True:
-			print("Collision")
+			self.isIt = not self.isIt
+			print(str(self.isIt))

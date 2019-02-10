@@ -20,11 +20,15 @@ class Enemy(Agent):
 
 	# Updates enemy's position, following target object if within attack range
 	def update(self, target):
-		# calculate direction and distance to target
-		directionToTarget = target.position - self.position
-		distToTarget = directionToTarget.length()
+		# if enemy is "it", calculate direction vector towards target
+		if self.isIt:
+			directionVector = target.position - self.position
+		# otherwise, calculate direction vector away from target
+		else:
+			directionVector = self.position - target.position
 
 		# if target is within attack range, follow it
+		distToTarget = directionVector.length()
 		if distToTarget < Constants.ATTACK_RANGE:
-			self.velocity = directionToTarget.normalize()
+			self.velocity = directionVector.normalize()
 			super().update(target)

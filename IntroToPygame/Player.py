@@ -43,8 +43,9 @@ class Player:
         pygame.draw.rect(screen, pygame.Color(0, 255, 0, 255), pygame.Rect(self.position.numerator, self.position.denominator, self.size, self.size), 0)
 
         # for debugging, draw line representing player's velocity
+        drawVector = self.velocity.scale(self.size * 1)
         pygame.draw.line(screen, pygame.Color(0, 0, 255, 255), (self.objectCenter.numerator, self.objectCenter.denominator), 
-				   (self.objectCenter.numerator + self.velocity.numerator, self.objectCenter.denominator + (self.size / 2) + self.velocity.denominator), 4)
+				    (self.objectCenter.numerator + drawVector.numerator, self.objectCenter.denominator + drawVector.denominator), 4)
 
     # Moves player-object in response to player-input (WASD),
     # and updates velocity vector accordingly

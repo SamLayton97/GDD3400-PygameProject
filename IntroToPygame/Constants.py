@@ -6,6 +6,9 @@ WORLD_WIDTH = 800
 WORLD_HEIGHT = 600
 BACKGROUND_COLOR = (100, 149, 237)
 
+# define game costants
+NO_TAG_BACKS_DURATION = 1000
+
 # define player constants
 PLAYER_SIZE = 30
 PLAYER_SPEED = 5.5

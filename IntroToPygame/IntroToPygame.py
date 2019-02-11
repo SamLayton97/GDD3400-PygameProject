@@ -19,6 +19,9 @@ framerate = pygame.time.Clock()
 # method to respond to in-game events
 def EventHandler():
 	for event in pygame.event.get():
+		# if timer ends, allow "tag-backs"
+		if event.type == USEREVENT:
+			print("timer finished")
 		# if player attempts to quit, exit game
 		if event.type == QUIT:
 			pygame.quit()

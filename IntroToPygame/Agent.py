@@ -1,4 +1,5 @@
 from Vector import *
+import Constants
 import pygame
 from pygame.locals import *
 pygame.init()
@@ -74,7 +75,10 @@ class Agent:
 	# Detects whether agent has collided with another,
 	# and changes ai behaviors accordingly
 	def collisionDetect(self, other):
-		# if agent collides with another, swap between seek-flee behaviors
+		# if agent collides with another and agent can "tag back"
 		if self.collisionBox.colliderect(other.collisionBox) == True:
+			# swap seek-flee behaviors
 			self.isIt = not self.isIt
-			print("Tag!")
+			
+			# start no-tag-backs timer
+			pygame.time.set_timer(USEREVENT, Constants.NO_TAG_BACKS_DURATION)

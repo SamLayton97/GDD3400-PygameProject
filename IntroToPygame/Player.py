@@ -28,3 +28,5 @@ class Player(Agent):
             movementVector = Vector(xInput, yInput)
             self.velocity = movementVector.normalize()
             super().update(target, worldBounds)
+        else:
+            self.velocity = Vector(0, 0)

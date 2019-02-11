@@ -11,7 +11,7 @@ NO_TAG_BACKS_DURATION = 1000
 
 # define player constants
 PLAYER_SIZE = 20
-PLAYER_SPEED = 6
+PLAYER_SPEED = 5.5
 PLAYER_COLOR = (0, 0, 255, 255)
 
 # define enemy constants

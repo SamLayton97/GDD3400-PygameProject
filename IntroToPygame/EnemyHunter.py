@@ -8,12 +8,15 @@ pygame.init()
 # Smarter enemy agent with pursue-evade capabilities
 class EnemyHunter(Agent):
 
+	# public variables
+	interceptPoint = Vector(0, 0)
+
 	# Draws vision-detection line on top of drawing itself and its vector line
 	def draw(self, screen, target):
 		# for debugging: draw line from enemy's center to where target is moving
 		if self.velocity.numerator != 0 or self.velocity.denominator != 0:
 			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.numerator, self.objectCenter.denominator),
-					(target.objectCenter.numerator, target.objectCenter.denominator), 3)
+					(self.interceptPoint.numerator, self.interceptPoint.denominator), 3)
 
 		# draw self and vector line
 		super().draw(screen)
@@ -34,9 +37,9 @@ class EnemyHunter(Agent):
 			# estimate where target will be after t time
 			timeToIntercept = distToTarget / self.speed
 			targetTravelDist = timeToIntercept * target.speed
-			interceptPoint = target.velocity.scale(targetTravelDist) + target.position
+			self.interceptPoint = target.velocity.scale(targetTravelDist) + target.position
 
 			# move agent in direction of intercept point
-			interceptVector = interceptPoint - self.position
+			interceptVector = self.interceptPoint - self.position
 			self.velocity = interceptVector.normalize()
 			super().update(target, worldBounds)

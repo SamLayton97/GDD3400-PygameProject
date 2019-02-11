@@ -9,13 +9,6 @@ from Vector import *
 from Player import *
 from Enemy import *
 
-# set display
-screen = pygame.display.set_mode((Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT))
-pygame.display.set_caption("Moving Agents")
-
-# retrieve framerate of game
-framerate = pygame.time.Clock()
-
 # method to respond to in-game events
 def EventHandler():
 	for event in pygame.event.get():
@@ -27,6 +20,13 @@ def EventHandler():
 		if event.type == QUIT:
 			pygame.quit()
 			quit()
+
+# set display
+screen = pygame.display.set_mode((Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT))
+pygame.display.set_caption("Moving Agents")
+
+# retrieve framerate of game
+framerate = pygame.time.Clock()
 
 # spawn agents
 myPlayer = Player(Vector(Constants.WORLD_WIDTH / 2, Constants.WORLD_HEIGHT / 2), Constants.PLAYER_SIZE, Constants.PLAYER_SPEED, Constants.PLAYER_COLOR)

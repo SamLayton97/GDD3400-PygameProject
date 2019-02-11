@@ -24,22 +24,21 @@ class EnemyHunter(Agent):
 	# Updates enemy's position, following target object if within attack range
 	def update(self, target, worldBounds):
 		print(str(self.isIt))
-		# if enemy is "it", calculate direction vector towards target
-		if self.isIt:
-			directionVector = target.position - self.position
-		# otherwise, calculate direction vector away from target
-		else:
-			directionVector = self.position - target.position
+		# calculate distance to target
+		directionVector = target.position - self.position
+		distToTarget = directionVector.length()
 
 		# if target is within attack range, pursue/evade it
-		distToTarget = directionVector.length()
 		if distToTarget < Constants.ATTACK_RANGE:
 			# estimate where target will be after t time
 			timeToIntercept = distToTarget / self.speed
 			targetTravelDist = timeToIntercept * target.speed
-			self.interceptPoint = target.velocity.scale(targetTravelDist) + target.position
+			self.interceptPoint = target.velocity.scale(targetTravelDist) + target.objectCenter
 
-			# move agent in direction of intercept point
-			interceptVector = self.interceptPoint - self.position
+			# move agent in direction of / away from intercept point
+			if self.isIt:
+				interceptVector = self.interceptPoint - self.position
+			else: 
+				interceptVector = self.position - self.interceptPoint
 			self.velocity = interceptVector.normalize()
 			super().update(target, worldBounds)

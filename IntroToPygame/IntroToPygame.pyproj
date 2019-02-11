@@ -30,6 +30,9 @@
     <Compile Include="Enemy.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="EnemyHunter.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IntroToPygame.py" />
     <Compile Include="Player.py">
       <SubType>Code</SubType>

@@ -8,6 +8,7 @@ import Constants
 from Vector import *
 from Player import *
 from Enemy import *
+from EnemyHunter import *
 
 # method to respond to in-game events
 def EventHandler():
@@ -15,7 +16,8 @@ def EventHandler():
 		# if timer ends, allow "tag-backs"
 		if event.type == USEREVENT:
 			myPlayer.canTagBack = True
-			newEnemy.canTagBack = True
+			#newEnemy.canTagBack = True
+			newHunter.canTagBack = True
 		# if player attempts to quit, exit game
 		if event.type == QUIT:
 			pygame.quit()
@@ -30,7 +32,8 @@ framerate = pygame.time.Clock()
 
 # spawn agents
 myPlayer = Player(Vector(Constants.WORLD_WIDTH / 2, Constants.WORLD_HEIGHT / 2), Constants.PLAYER_SIZE, Constants.PLAYER_SPEED, Constants.PLAYER_COLOR)
-newEnemy = Enemy(Vector(100, 100), Constants.ENEMY_SIZE, Constants.ENEMY_SPEED, Constants.ENEMY_COLOR)
+#newEnemy = Enemy(Vector(100, 100), Constants.ENEMY_SIZE, Constants.ENEMY_SPEED, Constants.ENEMY_COLOR)
+newHunter = EnemyHunter(Vector(100, 100), Constants.ENEMY_SIZE, Constants.ENEMY_SPEED, Constants.HUNTER_COLOR)
 
 # game loop
 while True:
@@ -40,12 +43,14 @@ while True:
 	# lock framerate
 	framerate.tick(Constants.FRAME_RATE)
 
-	# update and draw player and enemy
+	# update and draw player and ai agents
 	worldBounds = Vector(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT)
-	myPlayer.update(newEnemy, worldBounds)
+	myPlayer.update(newHunter, worldBounds)
 	myPlayer.draw(screen)
-	newEnemy.update(myPlayer, worldBounds)
-	newEnemy.draw(screen, myPlayer)
+	#newEnemy.update(myPlayer, worldBounds)
+	#newEnemy.draw(screen, myPlayer)
+	newHunter.update(myPlayer, worldBounds)
+	newHunter.draw(screen, myPlayer)
 
 	# update display and erase residue of current frame before drawing next
 	pygame.display.update()

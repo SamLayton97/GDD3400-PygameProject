@@ -1,4 +1,5 @@
-# import and initialize pygame
+# import libraries
+import random
 import pygame
 from pygame.locals import *
 pygame.init()
@@ -16,8 +17,8 @@ def EventHandler():
 		# if timer ends, allow "tag-backs"
 		if event.type == USEREVENT:
 			myPlayer.canTagBack = True
-			#newEnemy.canTagBack = True
-			newHunter.canTagBack = True
+			for enemy in enemies:
+				enemy.canTagBack = True
 		# if player attempts to quit, exit game
 		if event.type == QUIT:
 			pygame.quit()
@@ -25,15 +26,29 @@ def EventHandler():
 
 # set display
 screen = pygame.display.set_mode((Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT))
+worldBounds = Vector(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT)
 pygame.display.set_caption("Moving Agents")
 
 # retrieve framerate of game
 framerate = pygame.time.Clock()
 
-# spawn agents
+# spawn player at center of screen
 myPlayer = Player(Vector(Constants.WORLD_WIDTH / 2, Constants.WORLD_HEIGHT / 2), Constants.PLAYER_SIZE, Constants.PLAYER_SPEED, Constants.PLAYER_COLOR)
-#newEnemy = Enemy(Vector(100, 100), Constants.ENEMY_SIZE, Constants.ENEMY_SPEED, Constants.ENEMY_COLOR)
-newHunter = EnemyHunter(Vector(100, 100), Constants.ENEMY_SIZE, Constants.ENEMY_SPEED, Constants.HUNTER_COLOR)
+
+# spawn 5 standard enemies at random points on map
+enemies = []
+for i in range(5):
+	randX = random.randint(1, Constants.WORLD_WIDTH - Constants.ENEMY_SIZE - 1)
+	randY = random.randint(1, Constants.WORLD_HEIGHT - Constants.ENEMY_SIZE - 1)
+	newEnemy = Enemy(Vector(randX, randY), Constants.ENEMY_SIZE, Constants.ENEMY_SPEED, Constants.ENEMY_COLOR)
+	enemies.append(newEnemy)
+
+# spawn 5 hunter enemies at random points on map
+for i in range(5):
+	randX = random.randint(1, Constants.WORLD_WIDTH - Constants.ENEMY_SIZE - 1)
+	randY = random.randint(1, Constants.WORLD_HEIGHT - Constants.ENEMY_SIZE - 1)
+	newHunter = EnemyHunter(Vector(randX, randY), Constants.ENEMY_SIZE, Constants.ENEMY_SPEED, Constants.HUNTER_COLOR)
+	enemies.append(newHunter)
 
 # game loop
 while True:
@@ -44,13 +59,11 @@ while True:
 	framerate.tick(Constants.FRAME_RATE)
 
 	# update and draw player and ai agents
-	worldBounds = Vector(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT)
-	myPlayer.update(newHunter, worldBounds)
+	myPlayer.update(enemies[0], worldBounds)
 	myPlayer.draw(screen)
-	#newEnemy.update(myPlayer, worldBounds)
-	#newEnemy.draw(screen, myPlayer)
-	newHunter.update(myPlayer, worldBounds)
-	newHunter.draw(screen, myPlayer)
+	for enemy in enemies:
+		enemy.update(myPlayer, worldBounds)
+		enemy.draw(screen)
 
 	# update display and erase residue of current frame before drawing next
 	pygame.display.update()

@@ -8,27 +8,33 @@ pygame.init()
 # Basic enemy agent with seek-flee capabilities
 class Enemy(Agent):
 
+	# public variables
+	interceptPoint = Vector(0, 0)
+
 	# Draws vision-detection line on top of drawing itself and its vector line
-	def draw(self, screen, target):
+	def draw(self, screen):
 		# for debugging: draw line from enemy's center to target's center if following target
 		if self.velocity.numerator != 0 or self.velocity.denominator != 0:
 			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.numerator, self.objectCenter.denominator),
-					(target.objectCenter.numerator, target.objectCenter.denominator), 3)
+					(self.interceptPoint.numerator + self.objectCenter.numerator, self.interceptPoint.denominator + self.objectCenter.denominator), 3)
 
 		# draw self and vector line
 		super().draw(screen)
 
 	# Updates enemy's position, following target object if within attack range
 	def update(self, target, worldBounds):
-		# if enemy is "it", calculate direction vector towards target
-		if self.isIt:
-			directionVector = target.position - self.position
-		# otherwise, calculate direction vector away from target
-		else:
-			directionVector = self.position - target.position
+		# calculate distance to target
+		self.interceptPoint = target.position - self.position
+		distToTarget = self.interceptPoint.length()
 
 		# if target is within attack range, seek/flee from it
-		distToTarget = directionVector.length()
 		if distToTarget < Constants.ATTACK_RANGE:
-			self.velocity = directionVector.normalize()
+			self.velocity = self.interceptPoint.normalize()
+
+			# if enemy is fleeing, reverse their velocity
+			if not self.isIt:
+				self.velocity = self.velocity.scale(-1)
+
 			super().update(target, worldBounds)
+		else:
+			self.velocity = Vector(0, 0)

@@ -12,7 +12,7 @@ class EnemyHunter(Agent):
 	interceptPoint = Vector(0, 0)
 
 	# Draws vision-detection line on top of drawing itself and its vector line
-	def draw(self, screen, target):
+	def draw(self, screen):
 		# for debugging: draw line from enemy's center to where target is moving
 		if self.velocity.numerator != 0 or self.velocity.denominator != 0:
 			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.numerator, self.objectCenter.denominator),
@@ -41,3 +41,5 @@ class EnemyHunter(Agent):
 				interceptVector = self.position - self.interceptPoint
 			self.velocity = interceptVector.normalize()
 			super().update(target, worldBounds)
+		else:
+			self.velocity = Vector(0, 0)

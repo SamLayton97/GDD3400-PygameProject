@@ -23,7 +23,6 @@ class EnemyHunter(Agent):
 
 	# Updates enemy's position, following target object if within attack range
 	def update(self, target, worldBounds):
-		print(str(self.isIt))
 		# calculate distance to target
 		directionVector = target.position - self.position
 		distToTarget = directionVector.length()

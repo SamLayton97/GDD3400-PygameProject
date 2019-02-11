@@ -16,6 +16,7 @@ class Agent:
 	color = (0, 0, 0)
 	collisionBox = pygame.Rect(position.numerator, position.denominator, size, size)
 	isIt = True
+	canTagBack = True
 
 	# Constructor:
 	# Initializes agent's starting position,
@@ -76,9 +77,10 @@ class Agent:
 	# and changes ai behaviors accordingly
 	def collisionDetect(self, other):
 		# if agent collides with another and agent can "tag back"
-		if self.collisionBox.colliderect(other.collisionBox) == True:
+		if self.collisionBox.colliderect(other.collisionBox) == True and self.canTagBack:
 			# swap seek-flee behaviors
 			self.isIt = not self.isIt
 			
 			# start no-tag-backs timer
 			pygame.time.set_timer(USEREVENT, Constants.NO_TAG_BACKS_DURATION)
+			self.canTagBack = False

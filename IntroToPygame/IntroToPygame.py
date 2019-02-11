@@ -21,13 +21,14 @@ def EventHandler():
 	for event in pygame.event.get():
 		# if timer ends, allow "tag-backs"
 		if event.type == USEREVENT:
-			print("timer finished")
+			myPlayer.canTagBack = True
+			newEnemy.canTagBack = True
 		# if player attempts to quit, exit game
 		if event.type == QUIT:
 			pygame.quit()
 			quit()
 
-# spawn player and enemy
+# spawn agents
 myPlayer = Player(Vector(Constants.WORLD_WIDTH / 2, Constants.WORLD_HEIGHT / 2), Constants.PLAYER_SIZE, Constants.PLAYER_SPEED, Constants.PLAYER_COLOR)
 newEnemy = Enemy(Vector(100, 100), Constants.ENEMY_SIZE, Constants.ENEMY_SPEED, Constants.ENEMY_COLOR)
 

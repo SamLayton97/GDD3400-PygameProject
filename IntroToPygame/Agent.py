@@ -16,11 +16,12 @@ class Agent:
 	maxSpeed = 0
 	objectCenter = Vector(0, 0)
 	color = (0, 0, 0)
-	collisionBox = pygame.Rect(position.numerator, position.denominator, size.numerator, size.denominator)
-	isIt = True
-	canTagBack = True
 	originalSurface = None
 	surface = None
+	collisionBox = None
+	boundingRect = None
+	isIt = True
+	canTagBack = True
 
 	# Constructor:
 	# Initializes agent's values to corresponding parameters and 
@@ -34,10 +35,10 @@ class Agent:
 		self.originalSurface = surface
 		self.surface = surface
 
-		# initialize speed and calculate agent's center in world coordinates
-		self.velocity = Vector(0, 0)
+		# calculate agent's center and collision box
 		self.objectCenter = Vector(position.numerator + (size.numerator / 2), position.denominator + (size.denominator / 2))
 		self.collisionBox = pygame.Rect(self.position.numerator, self.position.denominator, self.size.numerator, self.size.denominator)
+		self.boundingRect = self.surface.get_bounding_rect()
 
 	# Prints agent's size, position, velocity, and
 	# center (in world coordinates) for debugging
@@ -93,8 +94,12 @@ class Agent:
 	# Draws agents and its velocity at a given position on screen
 	def draw(self, screen):
 		# draw agent's sprite
-		#pygame.draw.rect(screen, self.color, self.collisionBox, 0)
 		screen.blit(self.surface, (self.position.numerator, self.position.denominator))
+
+		# for debugging: draw bounding rectangle of agent's sprite surface
+		self.boundingRect = self.surface.get_bounding_rect()
+		self.boundingRect = self.boundingRect.move(self.position.numerator, self.position.denominator)
+		pygame.draw.rect(screen, self.color, self.boundingRect, 2);
 
 		# for debugging: draw line pointing in direction of agent's velocity
 		drawVector = self.velocity.scale(self.size.numerator)

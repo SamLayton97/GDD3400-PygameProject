@@ -19,6 +19,7 @@ class Agent:
 	collisionBox = pygame.Rect(position.numerator, position.denominator, size.numerator, size.denominator)
 	isIt = True
 	canTagBack = True
+	originalSurface = None
 	surface = None
 
 	# Constructor:
@@ -30,6 +31,7 @@ class Agent:
 		self.size = Vector(size.numerator, size.denominator)
 		self.maxSpeed = maxSpeed
 		self.color = color
+		self.originalSurface = surface
 		self.surface = surface
 
 		# initialize speed and calculate agent's center in world coordinates
@@ -64,12 +66,20 @@ class Agent:
 		self.objectCenter += displacementVector
 
 		# rotate agent's sprite to face direction of velocity
-		#rotAngleInRads = math.atan2(-self.velocity.denominator, self.velocity.numerator)
-		#self.surface = pygame.transform.rotate(self.surface, math.degrees(rotAngleInRads))
+		self.faceForward()
 
 		# calculate agent's collision box and detect collision
 		self.collisionBox = pygame.Rect(self.position.numerator, self.position.denominator, self.size.numerator, self.size.denominator)
 		self.collisionDetect(target)
+
+	# Rotates sprite to face direction of agent's velocity
+	def faceForward(self):
+		# calculate rotation necessary to face velocity
+		rotationRadians = math.atan2(-self.velocity.denominator, self.velocity.numerator)
+		rotationDegrees = math.degrees(rotationRadians)
+
+		# rotate sprite
+		self.surface = pygame.transform.rotate(self.originalSurface, rotationDegrees)
 
 	# Detects whether agent has collided with another,
 	# and changes ai behaviors accordingly

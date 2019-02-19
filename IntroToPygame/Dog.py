@@ -23,10 +23,15 @@ class Dog(Agent):
 		elif pressed[K_d]:
 			xInput = 1
 
-        # move player in direction of normalized velocity, scaled up by their speed
+		# if player entered movement input, move player
 		if xInput != 0 or yInput != 0:
+			# accelerate player
+			self.currSpeed = self.maxSpeed
+
+			# update velocity and move player
 			movementVector = Vector(xInput, yInput)
 			self.velocity = movementVector.normalize()
 			super().update(target, worldBounds)
+		# otherwise, freeze movement by halting speed
 		else:
-			self.velocity = Vector(0, 0)
+			self.currSpeed = 0

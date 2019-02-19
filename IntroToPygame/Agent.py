@@ -1,3 +1,4 @@
+import math
 from Vector import *
 import Constants
 import pygame
@@ -11,7 +12,8 @@ class Agent:
 	position = Vector(0, 0)
 	velocity = Vector(0, 0)
 	size = Vector(0, 0)
-	speed = 0
+	currSpeed = 0
+	maxSpeed = 0
 	objectCenter = Vector(0, 0)
 	color = (0, 0, 0)
 	collisionBox = pygame.Rect(position.numerator, position.denominator, size.numerator, size.denominator)
@@ -22,11 +24,11 @@ class Agent:
 	# Constructor:
 	# Initializes agent's values to corresponding parameters and 
 	# initializes their velocity and center from that.
-	def __init__(self, position, size, speed, color, surface):
+	def __init__(self, position, size, maxSpeed, color, surface):
 		# set variables to appropriate parameters
 		self.position = position
 		self.size = Vector(size.numerator, size.denominator)
-		self.speed = speed
+		self.maxSpeed = maxSpeed
 		self.color = color
 		self.surface = surface
 
@@ -47,7 +49,7 @@ class Agent:
 	# Updates agent's position and collision box
 	def update(self, target, worldBounds):
 		# calculate displacement of agent between frames
-		displacementVector = self.velocity.scale(self.speed)
+		displacementVector = self.velocity.scale(self.currSpeed)
 
 		# clamp displacement vector to within world bounds
 		futureX = displacementVector.numerator + self.position.numerator
@@ -57,8 +59,13 @@ class Agent:
 		if (futureY < 0) or (futureY + self.size.denominator > worldBounds.denominator):
 			displacementVector.denominator = 0
 
+		# update agent's position
 		self.position += displacementVector
 		self.objectCenter += displacementVector
+
+		# rotate agent's sprite to face direction of velocity
+		#rotAngleInRads = math.atan2(-self.velocity.denominator, self.velocity.numerator)
+		#self.surface = pygame.transform.rotate(self.surface, math.degrees(rotAngleInRads))
 
 		# calculate agent's collision box and detect collision
 		self.collisionBox = pygame.Rect(self.position.numerator, self.position.denominator, self.size.numerator, self.size.denominator)

@@ -66,20 +66,17 @@ class Agent:
 		self.objectCenter += displacementVector
 
 		# rotate agent's sprite to face direction of velocity
-		self.faceForward()
+		rotationRadians = math.atan2(-self.velocity.denominator, self.velocity.numerator)
+		rotationDegrees = math.degrees(rotationRadians)
+		self.rotate(rotationDegrees - 90)
 
 		# calculate agent's collision box and detect collision
 		self.collisionBox = pygame.Rect(self.position.numerator, self.position.denominator, self.size.numerator, self.size.denominator)
 		self.collisionDetect(target)
 
-	# Rotates sprite to face direction of agent's velocity
-	def faceForward(self):
-		# calculate rotation necessary to face velocity
-		rotationRadians = math.atan2(-self.velocity.denominator, self.velocity.numerator)
-		rotationDegrees = math.degrees(rotationRadians)
-
-		# rotate sprite
-		self.surface = pygame.transform.rotate(self.originalSurface, rotationDegrees)
+	# Rotates agent's sprite to face a given angle
+	def rotate(self, angle):
+		self.surface = pygame.transform.rotate(self.originalSurface, angle)
 
 	# Detects whether agent has collided with another,
 	# and changes ai behaviors accordingly

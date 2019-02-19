@@ -43,16 +43,6 @@ class Agent:
 		stringCenter = "Center: (" + str(self.objectCenter.numerator) + ", " + str(self.objectCenter.denominator) + ")\n"
 		return stringSize + stringPosition + stringVelocity + stringCenter
 
-	# Draws agents and its velocity at a given position on screen
-	def draw(self, screen):
-		# draw self
-		pygame.draw.rect(screen, self.color, self.collisionBox, 0)
-
-		# for debugging: draw line pointing in direction of agent's velocity
-		drawVector = self.velocity.scale(self.size)
-		pygame.draw.line(screen, pygame.Color(0, 0, 255, 255), (self.objectCenter.numerator, self.objectCenter.denominator), 
-				   (self.objectCenter.numerator + drawVector.numerator, self.objectCenter.denominator + drawVector.denominator), 4)
-
 	# Updates agent's position and collision box
 	def update(self, target, worldBounds):
 		# calculate displacement of agent between frames
@@ -84,3 +74,13 @@ class Agent:
 			# start no-tag-backs timer
 			pygame.time.set_timer(USEREVENT, Constants.NO_TAG_BACKS_DURATION)
 			self.canTagBack = False
+
+	# Draws agents and its velocity at a given position on screen
+	def draw(self, screen):
+		# draw self
+		pygame.draw.rect(screen, self.color, self.collisionBox, 0)
+
+		# for debugging: draw line pointing in direction of agent's velocity
+		drawVector = self.velocity.scale(self.size)
+		pygame.draw.line(screen, pygame.Color(0, 0, 255, 255), (self.objectCenter.numerator, self.objectCenter.denominator), 
+				   (self.objectCenter.numerator + drawVector.numerator, self.objectCenter.denominator + drawVector.denominator), 4)

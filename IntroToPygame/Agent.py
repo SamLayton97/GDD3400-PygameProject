@@ -78,8 +78,9 @@ class Agent:
 
 	# Draws agents and its velocity at a given position on screen
 	def draw(self, screen):
-		# draw self
-		pygame.draw.rect(screen, self.color, self.collisionBox, 0)
+		# draw agent's sprite
+		#pygame.draw.rect(screen, self.color, self.collisionBox, 0)
+		screen.blit(self.surface, (self.position.numerator, self.position.denominator))
 
 		# for debugging: draw line pointing in direction of agent's velocity
 		drawVector = self.velocity.scale(self.size)

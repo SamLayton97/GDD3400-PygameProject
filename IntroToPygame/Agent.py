@@ -10,11 +10,11 @@ class Agent:
 	# public variables
 	position = Vector(0, 0)
 	velocity = Vector(0, 0)
-	size = 0
+	size = Vector(0, 0)
 	speed = 0
 	objectCenter = Vector(0, 0)
 	color = (0, 0, 0)
-	collisionBox = pygame.Rect(position.numerator, position.denominator, size, size)
+	collisionBox = pygame.Rect(position.numerator, position.denominator, size.numerator, size.denominator)
 	isIt = True
 	canTagBack = True
 	surface = None
@@ -25,15 +25,15 @@ class Agent:
 	def __init__(self, position, size, speed, color, surface):
 		# set variables to appropriate parameters
 		self.position = position
-		self.size = size
+		self.size = Vector(size.numerator, size.denominator)
 		self.speed = speed
 		self.color = color
 		self.surface = surface
 
 		# initialize speed and calculate agent's center in world coordinates
 		self.velocity = Vector(0, 0)
-		self.objectCenter = Vector(position.numerator + (size / 2), position.denominator + (size / 2))
-		self.collisionBox = pygame.Rect(self.position.numerator, self.position.denominator, self.size, self.size)
+		self.objectCenter = Vector(position.numerator + (size.numerator / 2), position.denominator + (size.denominator / 2))
+		self.collisionBox = pygame.Rect(self.position.numerator, self.position.denominator, self.size.numerator, self.size.denominator)
 
 	# Prints agent's size, position, velocity, and
 	# center (in world coordinates) for debugging
@@ -52,16 +52,16 @@ class Agent:
 		# clamp displacement vector to within world bounds
 		futureX = displacementVector.numerator + self.position.numerator
 		futureY = displacementVector.denominator + self.position.denominator
-		if (futureX < 0) or (futureX + self.size > worldBounds.numerator):
+		if (futureX < 0) or (futureX + self.size.numerator > worldBounds.numerator):
 			displacementVector.numerator = 0
-		if (futureY < 0) or (futureY + self.size > worldBounds.denominator):
+		if (futureY < 0) or (futureY + self.size.denominator > worldBounds.denominator):
 			displacementVector.denominator = 0
 
 		self.position += displacementVector
 		self.objectCenter += displacementVector
 
 		# calculate agent's collision box and detect collision
-		self.collisionBox = pygame.Rect(self.position.numerator, self.position.denominator, self.size, self.size)
+		self.collisionBox = pygame.Rect(self.position.numerator, self.position.denominator, self.size.numerator, self.size.denominator)
 		self.collisionDetect(target)
 
 	# Detects whether agent has collided with another,
@@ -83,6 +83,6 @@ class Agent:
 		screen.blit(self.surface, (self.position.numerator, self.position.denominator))
 
 		# for debugging: draw line pointing in direction of agent's velocity
-		drawVector = self.velocity.scale(self.size)
+		drawVector = self.velocity.scale(self.size.numerator)
 		pygame.draw.line(screen, pygame.Color(0, 0, 255, 255), (self.objectCenter.numerator, self.objectCenter.denominator), 
 				   (self.objectCenter.numerator + drawVector.numerator, self.objectCenter.denominator + drawVector.denominator), 4)

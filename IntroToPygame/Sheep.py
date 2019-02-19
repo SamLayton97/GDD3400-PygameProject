@@ -16,7 +16,7 @@ class Sheep(Agent):
 		# for debugging: draw line from enemy's center to target's center if following target
 		if self.velocity.numerator != 0 or self.velocity.denominator != 0:
 			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.numerator, self.objectCenter.denominator),
-					(self.interceptPoint.numerator + self.objectCenter.numerator, self.interceptPoint.denominator + self.objectCenter.denominator), 3)
+					(self.objectCenter.numerator - self.interceptPoint.numerator, self.objectCenter.denominator - self.interceptPoint.denominator), 2)
 
 		# draw self and vector line
 		super().draw(screen)

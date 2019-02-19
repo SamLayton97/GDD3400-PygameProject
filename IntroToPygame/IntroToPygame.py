@@ -37,14 +37,14 @@ sheepSurface = pygame.image.load('sheep.png')
 dogSurface = pygame.image.load('collie.png')
 
 # spawn player at center of screen
-myDog = Dog(Vector(Constants.WORLD_WIDTH / 2, Constants.WORLD_HEIGHT / 2), Constants.PLAYER_SIZE, Constants.PLAYER_SPEED, Constants.PLAYER_COLOR, dogSurface)
+myDog = Dog(Vector(Constants.WORLD_WIDTH / 2, Constants.WORLD_HEIGHT / 2), Vector(Constants.DOG_WIDTH, Constants.DOG_HEIGHT), Constants.PLAYER_SPEED, Constants.PLAYER_COLOR, dogSurface)
 
 # spawn 10 sheep at random points on map
 sheep = []
 for i in range(10):
 	randX = random.randint(1, Constants.WORLD_WIDTH - Constants.ENEMY_SIZE - 1)
 	randY = random.randint(1, Constants.WORLD_HEIGHT - Constants.ENEMY_SIZE - 1)
-	newSheep = Sheep(Vector(randX, randY), Constants.ENEMY_SIZE, Constants.ENEMY_SPEED, Constants.ENEMY_COLOR, sheepSurface)
+	newSheep = Sheep(Vector(randX, randY), Vector(Constants.SHEEP_WIDTH, Constants.SHEEP_HEIGHT), Constants.ENEMY_SPEED, Constants.ENEMY_COLOR, sheepSurface)
 	sheep.append(newSheep)
 
 # game loop

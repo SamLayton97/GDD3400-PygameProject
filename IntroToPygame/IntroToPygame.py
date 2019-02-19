@@ -8,6 +8,7 @@ pygame.init()
 import Constants
 from Vector import *
 from Player import *
+from Dog import *
 from Sheep import *
 
 # method to respond to in-game events
@@ -15,7 +16,7 @@ def EventHandler():
 	for event in pygame.event.get():
 		# if timer ends, allow "tag-backs"
 		if event.type == USEREVENT:
-			myPlayer.canTagBack = True
+			myDog.canTagBack = True
 			for agent in sheep:
 				agent.canTagBack = True
 		# if player attempts to quit, exit game
@@ -32,7 +33,7 @@ pygame.display.set_caption("Herding Sheep")
 framerate = pygame.time.Clock()
 
 # spawn player at center of screen
-myPlayer = Player(Vector(Constants.WORLD_WIDTH / 2, Constants.WORLD_HEIGHT / 2), Constants.PLAYER_SIZE, Constants.PLAYER_SPEED, Constants.PLAYER_COLOR)
+myDog = Dog(Vector(Constants.WORLD_WIDTH / 2, Constants.WORLD_HEIGHT / 2), Constants.PLAYER_SIZE, Constants.PLAYER_SPEED, Constants.PLAYER_COLOR)
 
 # spawn 10 sheep at random points on map
 sheep = []
@@ -51,10 +52,10 @@ while True:
 	framerate.tick(Constants.FRAME_RATE)
 
 	# update and draw player and ai agents
-	myPlayer.update(sheep[0], worldBounds)
-	myPlayer.draw(screen)
+	myDog.update(sheep[0], worldBounds)
+	myDog.draw(screen)
 	for agent in sheep:
-		agent.update(myPlayer, worldBounds)
+		agent.update(myDog, worldBounds)
 		agent.draw(screen)
 
 	# update display and erase residue of current frame before drawing next

@@ -17,17 +17,18 @@ class Agent:
 	collisionBox = pygame.Rect(position.numerator, position.denominator, size, size)
 	isIt = True
 	canTagBack = True
+	surface = None
 
 	# Constructor:
-	# Initializes agent's starting position,
-	# size, speed, and color according to parameters, and 
+	# Initializes agent's values to corresponding parameters and 
 	# initializes their velocity and center from that.
-	def __init__(self, position, size, speed, color):
-		# set position, size and speed to parameters
+	def __init__(self, position, size, speed, color, surface):
+		# set variables to appropriate parameters
 		self.position = position
 		self.size = size
 		self.speed = speed
 		self.color = color
+		self.surface = surface
 
 		# initialize speed and calculate agent's center in world coordinates
 		self.velocity = Vector(0, 0)

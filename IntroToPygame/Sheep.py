@@ -9,15 +9,7 @@ pygame.init()
 class Sheep(Agent):
 
 	# public variables
-	surface = None
 	interceptPoint = Vector(0, 0)
-
-	# Constructor:
-	# Initializes all parent agent variables, and gives sheep a
-	# sprite surface to draw.
-	def __init__(self, position, size, speed, color, surface):
-		super().__init__(position, size, speed, color)
-		self.surface = surface
 
 	# Draws vision-detection line on top of drawing itself and its vector line
 	def draw(self, screen):

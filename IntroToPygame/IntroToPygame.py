@@ -37,7 +37,7 @@ sheepSurface = pygame.image.load('sheep.png')
 dogSurface = pygame.image.load('collie.png')
 
 # spawn player at center of screen
-myDog = Dog(Vector(Constants.WORLD_WIDTH / 2, Constants.WORLD_HEIGHT / 2), Constants.PLAYER_SIZE, Constants.PLAYER_SPEED, Constants.PLAYER_COLOR)
+myDog = Dog(Vector(Constants.WORLD_WIDTH / 2, Constants.WORLD_HEIGHT / 2), Constants.PLAYER_SIZE, Constants.PLAYER_SPEED, Constants.PLAYER_COLOR, dogSurface)
 
 # spawn 10 sheep at random points on map
 sheep = []

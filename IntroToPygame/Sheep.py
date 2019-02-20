@@ -55,8 +55,10 @@ class Sheep(Agent):
 
 		# calculate composite forces on sheep
 		alignmentInfluence = self.calculateAlignment()
+		cohesionInfluence = self.calculateCohesion()
 		dogInfluence = self.calculateDogInfluence(dog)
-		forces = alignmentInfluence.scale(Constants.SHEEP_ALIGNMENT_WEIGHT) + dogInfluence.scale(Constants.SHEEP_DOG_INFLUENCE_WEIGHT)
+		forces = (alignmentInfluence.scale(Constants.SHEEP_ALIGNMENT_WEIGHT) + cohesionInfluence.scale(Constants.SHEEP_COHESION_WEIGHT) + 
+			dogInfluence.scale(Constants.SHEEP_DOG_INFLUENCE_WEIGHT))
 
 		# if external forces influence velocity of sheep
 		if not (forces.numerator == 0 and forces.denominator == 0):
@@ -99,9 +101,9 @@ class Sheep(Agent):
 
 
 	# Calculates alignment influence neighboring sheep have on this one.
-	# Note: Aspect of flocking behavior.
+	# Note: First aspect of flocking behavior.
 	def calculateAlignment(self):
-		# define vector to keep track of neighboring velocities
+		# define vector to keep track of neighbor velocities
 		alignment = Vector(0, 0)
 		neighborCount = len(self.neighbors)
 
@@ -109,9 +111,29 @@ class Sheep(Agent):
 		for currSheep in self.neighbors:
 			alignment += currSheep.velocity
 
-		# if the number of sheep wasn't 0, normalize alignment vector
-		if (neighborCount > 0):
+		# if the number of neighbors wasn't 0, normalize alignment vector
+		if neighborCount > 0:
 			alignment = alignment.normalize()
 
 		# return alignment influence vector
 		return alignment
+
+	# Calculates cohesion influence neighboring sheep have on this one.
+	# Note: Second aspect of flocking behavior.
+	def calculateCohesion(self):
+		# define vector to keep track of neighbor positions
+		cohesion = Vector(0, 0)
+		neighborCount = len(self.neighbors)
+
+		# iterate over each sheep and add its position to composite cohesion vector
+		for currSheep in self.neighbors:
+			cohesion += currSheep.position
+
+		# if number of neighbors wasn't 0, calculate and normalize vector to neighbor center of mass
+		if neighborCount > 0:
+			cohesion = cohesion.scale(1 / neighborCount)
+			cohesion = Vector(cohesion.numerator - self.position.numerator, cohesion.denominator - self.position.denominator)
+			cohesion = cohesion.normalize()
+
+		# return cohesion influence vector
+		return cohesion

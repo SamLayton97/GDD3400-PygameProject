@@ -34,11 +34,11 @@ class Sheep(Agent):
 		self.faceVelocity()
 
 	# Draws vision-detection line on top of drawing itself and its vector line
-	def draw(self, screen):
+	def draw(self, screen, dog):
 		# for debugging: draw line from enemy's center to target's center if moving
 		if self.currSpeed != 0:
 			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.numerator, self.objectCenter.denominator),
-					(self.objectCenter.numerator - self.fleePoint.numerator, self.objectCenter.denominator - self.fleePoint.denominator), 2)
+					(dog.objectCenter.numerator, dog.objectCenter.denominator), 2)
 
 		# for debugging: draw line to each sheep in list of neighbors
 		for sheep in self.neighbors:
@@ -54,8 +54,8 @@ class Sheep(Agent):
 		self.findNeighbors(self.herd)
 
 		# calculate distance to dog
-		self.fleePoint = self.objectCenter - dog.objectCenter
-		distToDog = self.fleePoint.length()
+		#self.fleePoint = self.objectCenter - dog.objectCenter
+		#distToDog = self.fleePoint.length()
 
 		# calculate composite forces on sheep
 		dogInfluence = self.calculateDogInfluence(dog)

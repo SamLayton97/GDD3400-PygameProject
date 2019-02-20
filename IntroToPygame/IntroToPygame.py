@@ -64,7 +64,7 @@ while True:
 	myDog.draw(screen)
 	for agent in sheep:
 		agent.update(myDog, worldBounds)
-		agent.draw(screen)
+		agent.draw(screen, myDog)
 
 	# update display and erase residue of current frame before drawing next
 	pygame.display.update()

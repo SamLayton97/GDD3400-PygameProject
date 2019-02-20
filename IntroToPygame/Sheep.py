@@ -111,8 +111,6 @@ class Sheep(Agent):
 
 		# if the number of sheep wasn't 0, normalize alignment vector
 		if (neighborCount > 0):
-			alignment.numerator /= neighborCount
-			alignment.denominator /= neighborCount
 			alignment = alignment.normalize()
 
 		# return alignment influence vector

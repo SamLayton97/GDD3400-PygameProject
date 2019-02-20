@@ -53,10 +53,6 @@ class Sheep(Agent):
 		# find neighbors within herd
 		self.findNeighbors(self.herd)
 
-		# calculate distance to dog
-		#self.fleePoint = self.objectCenter - dog.objectCenter
-		#distToDog = self.fleePoint.length()
-
 		# calculate composite forces on sheep
 		dogInfluence = self.calculateDogInfluence(dog)
 		forces = dogInfluence.scale(Constants.SHEEP_DOG_INFLUENCE_WEIGHT)

@@ -54,8 +54,9 @@ class Sheep(Agent):
 		self.findNeighbors(self.herd)
 
 		# calculate composite forces on sheep
+		alignmentInfluence = self.calculateAlignment()
 		dogInfluence = self.calculateDogInfluence(dog)
-		forces = dogInfluence.scale(Constants.SHEEP_DOG_INFLUENCE_WEIGHT)
+		forces = alignmentInfluence.scale(Constants.SHEEP_ALIGNMENT_WEIGHT) + dogInfluence.scale(Constants.SHEEP_DOG_INFLUENCE_WEIGHT)
 
 		# if external forces influence velocity of sheep
 		if not (forces.numerator == 0 and forces.denominator == 0):
@@ -96,3 +97,23 @@ class Sheep(Agent):
 				# add current sheep to list of neighbors
 				self.neighbors.append(sheep)
 
+
+	# Calculates alignment influence neighboring sheep have on this one.
+	# Note: Aspect of flocking behavior.
+	def calculateAlignment(self):
+		# define vector to keep track of neighboring velocities
+		alignment = Vector(0, 0)
+		neighborCount = len(self.neighbors)
+
+		# iterate over each sheep and add its velocity to composite alignment velocity
+		for currSheep in self.neighbors:
+			alignment += currSheep.velocity
+
+		# if the number of sheep wasn't 0, normalize alignment vector
+		if (neighborCount > 0):
+			alignment.numerator /= neighborCount
+			alignment.denominator /= neighborCount
+			alignment = alignment.normalize()
+
+		# return alignment influence vector
+		return alignment

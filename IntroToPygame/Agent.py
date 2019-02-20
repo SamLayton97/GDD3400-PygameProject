@@ -52,14 +52,6 @@ class Agent:
 		# calculate displacement of agent between frames
 		displacementVector = self.velocity.scale(self.currSpeed)
 
-		# clamp displacement vector to within world bounds
-		#futureX = displacementVector.numerator + self.position.numerator
-		#futureY = displacementVector.denominator + self.position.denominator
-		#if (futureX < 0) or (futureX + self.size.numerator > worldBounds.numerator):
-			#displacementVector.numerator = 0
-		#if (futureY < 0) or (futureY + self.size.denominator > worldBounds.denominator):
-			#displacementVector.denominator = 0
-
 		# clamp and update agent's position
 		displacementVector = self.clampPosition(worldBounds, displacementVector)
 		self.movePosition(displacementVector)
@@ -77,7 +69,7 @@ class Agent:
 	def movePosition(self, displacementVector):
 		# update positions of both top-left corner and center of object
 		self.position += displacementVector
-		self.objectCenter += displacementVector
+		self.objectCenter = self.position + Vector(self.surface.get_width() / 2, self.surface.get_height() / 2)
 
 	# Rotates agent's sprite to face a given angle
 	def rotate(self, angle):

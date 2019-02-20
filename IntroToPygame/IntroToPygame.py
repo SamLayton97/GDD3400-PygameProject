@@ -47,6 +47,10 @@ for i in range(10):
 	newSheep = Sheep(Vector(randX, randY), Vector(Constants.SHEEP_WIDTH, Constants.SHEEP_HEIGHT), Constants.ENEMY_SPEED, Constants.ENEMY_COLOR, sheepSurface)
 	sheep.append(newSheep)
 
+# for each sheep, send them info of all other sheep in game (from which to find neighbors from)
+for agent in sheep:
+	agent.herd = sheep
+
 # game loop
 while True:
 	# respond to in-game events

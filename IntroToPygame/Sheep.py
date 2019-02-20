@@ -11,6 +11,8 @@ class Sheep(Agent):
 
 	# public variables
 	interceptPoint = Vector(0, 0)
+	neighbors = []
+	herd = []
 
 	# Constructor:
 	# Initialize all base Agent variables and then
@@ -38,11 +40,19 @@ class Sheep(Agent):
 			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.numerator, self.objectCenter.denominator),
 					(self.objectCenter.numerator - self.interceptPoint.numerator, self.objectCenter.denominator - self.interceptPoint.denominator), 2)
 
+		# for debugging: draw line to each sheep in list of neighbors
+		for sheep in self.neighbors:
+			pygame.draw.line(screen, pygame.Color(0, 0, 255), (self.objectCenter.numerator, self.objectCenter.denominator),
+					(sheep.objectCenter.numerator, sheep.objectCenter.denominator), 2)
+
 		# draw self and vector line
 		super().draw(screen)
 
 	# Updates sheep's position, running from player-dog if within run range
 	def update(self, target, worldBounds):
+		# find neighbors within herd
+		self.findNeighbors(self.herd)
+
 		# calculate distance to target
 		self.interceptPoint = self.objectCenter - target.objectCenter
 		distToTarget = self.interceptPoint.length()
@@ -54,3 +64,16 @@ class Sheep(Agent):
 			super().update(target, worldBounds)
 		else:
 			self.currSpeed = 0
+
+	# from a list of sheep, determine which ones are neighbors
+	def findNeighbors(self, herd):
+		# clear list of neighbors
+		self.neighbors.clear()
+
+		# iterate over every sheep in herd
+		for sheep in herd:
+			# if current sheep is not this sheep
+			# and distance to current sheep is within neighbor radius
+			if sheep != self and self.distanceToOther(sheep) < Constants.SHEEP_NEIGHBOR_RADIUS:
+				# add current sheep to list of neighbors
+				self.neighbors.append(sheep)

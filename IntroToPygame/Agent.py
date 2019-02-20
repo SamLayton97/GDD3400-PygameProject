@@ -67,7 +67,21 @@ class Agent:
 	def movePosition(self, displacementVector):
 		# update positions of both top-left corner and center of object
 		self.position += displacementVector
-		#self.objectCenter = self.position + Vector(self.surface.get_width() / 2, self.surface.get_height() / 2)
+
+	# Clamps future position to within world's bounds
+	def clampPosition(self, worldBounds, displacementVector):
+		# ignoring world bounds, calculate future position of agent after displacement
+		futureX = displacementVector.numerator + self.objectCenter.numerator
+		futureY = displacementVector.denominator + self.objectCenter.denominator
+
+		# if future position exceeds world bounds, clamp displacement
+		if (futureX < self.surface.get_width() / 2) or (futureX > worldBounds.numerator - self.surface.get_width() / 2):
+			displacementVector.numerator = 0
+		if (futureY < self.surface.get_height() / 2) or (futureY > worldBounds.denominator - self.surface.get_height() / 2):
+			displacementVector.denominator = 0
+
+		# return clamped displacement vector
+		return displacementVector
 
 	# Rotates agent's surface to face a given angle
 	def rotate(self, angle):
@@ -84,20 +98,10 @@ class Agent:
 		rotationDegrees = math.degrees(rotationRadians)
 		self.rotate(rotationDegrees - 90)
 
-	# Clamps future position to within world's bounds
-	def clampPosition(self, worldBounds, displacementVector):
-		# ignoring world bounds, calculate future position of agent after displacement
-		futureX = displacementVector.numerator + self.objectCenter.numerator
-		futureY = displacementVector.denominator + self.objectCenter.denominator
-
-		# if future position exceeds world bounds, clamp displacement
-		if (futureX < self.surface.get_width() / 2) or (futureX > worldBounds.numerator - self.surface.get_width() / 2):
-			displacementVector.numerator = 0
-		if (futureY < self.surface.get_height() / 2) or (futureY > worldBounds.denominator - self.surface.get_height() / 2):
-			displacementVector.denominator = 0
-
-		# return clamped displacement vector
-		return displacementVector
+	# Calculates distance to other agent
+	def distanceToOther(self, other):
+		distanceVector = other.objectCenter - self.objectCenter
+		return distanceVector.length()
 
 	# Updates collision box according to bounding box of agent's sprite
 	def updateCollisionBox(self):

@@ -42,8 +42,8 @@ myDog = Dog(Vector(Constants.WORLD_WIDTH / 2, Constants.WORLD_HEIGHT / 2), Vecto
 # spawn 10 sheep at random points on map
 sheep = []
 for i in range(10):
-	randX = random.randint(1, Constants.WORLD_WIDTH - Constants.ENEMY_SIZE - 1)
-	randY = random.randint(1, Constants.WORLD_HEIGHT - Constants.ENEMY_SIZE - 1)
+	randX = random.randint(1, Constants.WORLD_WIDTH - Constants.SHEEP_WIDTH - 1)
+	randY = random.randint(1, Constants.WORLD_HEIGHT - Constants.SHEEP_HEIGHT - 1)
 	newSheep = Sheep(Vector(randX, randY), Vector(Constants.SHEEP_WIDTH, Constants.SHEEP_HEIGHT), Constants.ENEMY_SPEED, Constants.ENEMY_COLOR, sheepSurface)
 	sheep.append(newSheep)
 

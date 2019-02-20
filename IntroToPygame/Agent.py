@@ -9,8 +9,8 @@ pygame.init()
 class Agent:
 
 	# public variables
-	position = Vector(0, 0)
-	objectCenter = Vector(0, 0)
+	position = Vector(0, 0)			# top left corner of object
+	objectCenter = Vector(0, 0)		# center of object
 	velocity = Vector(0, 0)
 	size = Vector(0, 0)
 	currSpeed = 0
@@ -35,7 +35,7 @@ class Agent:
 		self.surface = surface
 
 		# calculate agent's center and collision box
-		self.objectCenter = Vector(position.numerator + (size.numerator / 2), position.denominator + (size.denominator / 2))
+		self.objectCenter = self.position + self.size.scale(0.5)
 		self.updateCollisionBox()
 
 	# Prints agent's size, position, velocity, and
@@ -53,14 +53,15 @@ class Agent:
 		displacementVector = self.velocity.scale(self.currSpeed)
 
 		# clamp displacement vector to within world bounds
-		futureX = displacementVector.numerator + self.position.numerator
-		futureY = displacementVector.denominator + self.position.denominator
-		if (futureX < 0) or (futureX + self.size.numerator > worldBounds.numerator):
-			displacementVector.numerator = 0
-		if (futureY < 0) or (futureY + self.size.denominator > worldBounds.denominator):
-			displacementVector.denominator = 0
+		#futureX = displacementVector.numerator + self.position.numerator
+		#futureY = displacementVector.denominator + self.position.denominator
+		#if (futureX < 0) or (futureX + self.size.numerator > worldBounds.numerator):
+			#displacementVector.numerator = 0
+		#if (futureY < 0) or (futureY + self.size.denominator > worldBounds.denominator):
+			#displacementVector.denominator = 0
 
-		# update agent's position
+		# clamp and update agent's position
+		displacementVector = self.clampPosition(worldBounds, displacementVector)
 		self.movePosition(displacementVector)
 
 		# rotate agent's sprite to face direction of velocity
@@ -74,12 +75,28 @@ class Agent:
 
 	# Moves object by displacement vector
 	def movePosition(self, displacementVector):
+		# update positions of both top-left corner and center of object
 		self.position += displacementVector
 		self.objectCenter += displacementVector
 
 	# Rotates agent's sprite to face a given angle
 	def rotate(self, angle):
 		self.surface = pygame.transform.rotate(self.originalSurface, angle)
+
+	# Clamps future position to within world's bounds
+	def clampPosition(self, worldBounds, displacementVector):
+		# ignoring world bounds, calculate future position of agent after displacement
+		futureX = displacementVector.numerator + self.objectCenter.numerator
+		futureY = displacementVector.denominator + self.objectCenter.denominator
+
+		# if future position exceeds world bounds, clamp displacement
+		if (futureX < self.surface.get_width() / 2) or (futureX > worldBounds.numerator - self.surface.get_width() / 2):
+			displacementVector.numerator = 0
+		if (futureY < self.surface.get_height() / 2) or (futureY > worldBounds.denominator - self.surface.get_height() / 2):
+			displacementVector.denominator = 0
+
+		# return clamped displacement vector
+		return displacementVector
 
 	# Updates collision box according to bounding box of agent's sprite
 	def updateCollisionBox(self):

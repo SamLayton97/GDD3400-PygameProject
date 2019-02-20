@@ -68,6 +68,7 @@ class Sheep(Agent):
 
 			# update velocity to be normalized composite forces vector
 			self.velocity = forces.normalize()
+		# otherwise, freeze sheep's movement by locking speed
 		else:
 			self.currSpeed = 0
 

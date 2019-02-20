@@ -95,3 +95,4 @@ class Sheep(Agent):
 			if sheep != self and self.distanceToOther(sheep) < Constants.SHEEP_NEIGHBOR_RADIUS:
 				# add current sheep to list of neighbors
 				self.neighbors.append(sheep)
+

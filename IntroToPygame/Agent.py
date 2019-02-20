@@ -125,6 +125,6 @@ class Agent:
 		pygame.draw.rect(screen, self.color, self.collisionBox, 2)
 
 		# for debugging: draw line pointing in direction of agent's velocity
-		drawVector = self.velocity.scale(self.size.numerator)
-		pygame.draw.line(screen, pygame.Color(0, 0, 255, 255), (self.objectCenter.numerator, self.objectCenter.denominator), 
-				   (self.objectCenter.numerator + drawVector.numerator, self.objectCenter.denominator + drawVector.denominator), 4)
+		drawVector = self.velocity.scale(30)
+		pygame.draw.line(screen, pygame.Color(0, 255, 0, 255), (self.objectCenter.numerator, self.objectCenter.denominator), 
+				   (self.objectCenter.numerator + drawVector.numerator, self.objectCenter.denominator + drawVector.denominator), 2)

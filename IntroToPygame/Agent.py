@@ -19,7 +19,6 @@ class Agent:
 	originalSurface = None
 	surface = None
 	collisionBox = None
-	boundingRect = None
 	isIt = True
 	canTagBack = True
 
@@ -37,8 +36,7 @@ class Agent:
 
 		# calculate agent's center and collision box
 		self.objectCenter = Vector(position.numerator + (size.numerator / 2), position.denominator + (size.denominator / 2))
-		self.collisionBox = pygame.Rect(self.position.numerator, self.position.denominator, self.size.numerator, self.size.denominator)
-		self.boundingRect = self.surface.get_bounding_rect()
+		self.updateCollisionBox()
 
 	# Prints agent's size, position, velocity, and
 	# center (in world coordinates) for debugging
@@ -71,13 +69,18 @@ class Agent:
 		rotationDegrees = math.degrees(rotationRadians)
 		self.rotate(rotationDegrees - 90)
 
-		# calculate agent's collision box and detect collision
-		self.collisionBox = pygame.Rect(self.position.numerator, self.position.denominator, self.size.numerator, self.size.denominator)
+		# update agent's collision box and detect collision
+		self.updateCollisionBox()
 		self.collisionDetect(target)
 
 	# Rotates agent's sprite to face a given angle
 	def rotate(self, angle):
 		self.surface = pygame.transform.rotate(self.originalSurface, angle)
+
+	# Updates collision box according to bounding box of agent's sprite
+	def updateCollisionBox(self):
+		self.collisionBox = self.surface.get_bounding_rect()
+		self.collisionBox = self.collisionBox.move(self.position.numerator, self.position.denominator)
 
 	# Detects whether agent has collided with another,
 	# and changes ai behaviors accordingly
@@ -91,15 +94,15 @@ class Agent:
 			pygame.time.set_timer(USEREVENT, Constants.NO_TAG_BACKS_DURATION)
 			self.canTagBack = False
 
+			print("bitch")
+
 	# Draws agents and its velocity at a given position on screen
 	def draw(self, screen):
 		# draw agent's sprite
 		screen.blit(self.surface, (self.position.numerator, self.position.denominator))
 
 		# for debugging: draw bounding rectangle of agent's sprite surface
-		self.boundingRect = self.surface.get_bounding_rect()
-		self.boundingRect = self.boundingRect.move(self.position.numerator, self.position.denominator)
-		pygame.draw.rect(screen, self.color, self.boundingRect, 2);
+		pygame.draw.rect(screen, self.color, self.collisionBox, 2)
 
 		# for debugging: draw line pointing in direction of agent's velocity
 		drawVector = self.velocity.scale(self.size.numerator)

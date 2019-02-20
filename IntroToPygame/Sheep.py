@@ -57,14 +57,34 @@ class Sheep(Agent):
 		self.fleePoint = self.objectCenter - dog.objectCenter
 		distToDog = self.fleePoint.length()
 
-		# if dog is within minimum range, flee
-		if distToDog < Constants.ATTACK_RANGE:
+		# calculate composite forces on sheep
+		dogInfluence = self.calculateDogInfluence(dog)
+		forces = dogInfluence.scale(Constants.SHEEP_DOG_INFLUENCE_WEIGHT)
+
+		# if external forces influence velocity of sheep
+		if not (forces.numerator == 0 and forces.denominator == 0):
+			# increase sheep's speed
 			self.currSpeed = self.maxSpeed
-			self.velocity = self.fleePoint.normalize()
+
+			# update velocity to be normalized composite forces vector
+			self.velocity = forces.normalize()
 		else:
 			self.currSpeed = 0
 
 		super().update(dog, worldBounds)
+
+	# Calculates influence force of dog's proximity on sheep's velocity
+	def calculateDogInfluence(self, dog):
+		dogInfluence = Vector(0, 0)
+
+		# if the dog is within attack range
+		if self.distanceToOther(dog) < Constants.ATTACK_RANGE:
+			# calculate vector away from dog
+			dogInfluence = self.objectCenter - dog.objectCenter
+			dogInfluence.normalize()
+
+		# return normalized dog-influence vector
+		return dogInfluence
 
 	# from a list of sheep, determine which ones are neighbors
 	def findNeighbors(self, herd):

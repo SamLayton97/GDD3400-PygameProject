@@ -16,17 +16,20 @@ class Sheep(Agent):
 	# Initialize all base Agent variables and then
 	# set sheep to start with random velocity between -.5 and 5
 	def __init__(self, position, size, maxSpeed, color, surface):
-		# initialize base agent variables
-		super().__init__(position, size, maxSpeed, color, surface)
-
 		# randomize sheep's starting velocity so that at least one component isn't 0
 		velocityX = 0
 		velocityY = 0
-		while velocityX == 0 or velocityY == 0:
+		while velocityX == 0 and velocityY == 0:
 			velocityX = random.uniform(-.5, .5)
 			velocityY = random.uniform(-.5, .5)
 		randVector = Vector(velocityX, velocityY)
 		self.velocity = randVector.normalize()
+		
+		# initialize base agent variables
+		super().__init__(position, size, maxSpeed, color, surface)
+
+		# rotate sheep to face randomized starting velocity and update collision box
+		self.faceVelocity()
 
 	# Draws vision-detection line on top of drawing itself and its vector line
 	def draw(self, screen):

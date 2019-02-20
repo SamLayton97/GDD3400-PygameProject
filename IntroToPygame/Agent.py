@@ -56,24 +56,33 @@ class Agent:
 		displacementVector = self.clampPosition(worldBounds, displacementVector)
 		self.movePosition(displacementVector)
 
-		# rotate agent's sprite to face direction of velocity
-		rotationRadians = math.atan2(-self.velocity.denominator, self.velocity.numerator)
-		rotationDegrees = math.degrees(rotationRadians)
-		self.rotate(rotationDegrees - 90)
+		# rotate agent to face velocity vector
+		self.faceVelocity()
 
 		# update agent's collision box and detect collision
-		self.updateCollisionBox()
+		#self.updateCollisionBox()
 		self.collisionDetect(target)
 
 	# Moves object by displacement vector
 	def movePosition(self, displacementVector):
 		# update positions of both top-left corner and center of object
 		self.position += displacementVector
+		#self.objectCenter = self.position + Vector(self.surface.get_width() / 2, self.surface.get_height() / 2)
+
+	# Rotates agent's surface to face a given angle
+	def rotate(self, angle):
+		# rotate surface
+		self.surface = pygame.transform.rotate(self.originalSurface, angle)
+
+		# update collision box and object's center to match new rotated surface
+		self.updateCollisionBox()
 		self.objectCenter = self.position + Vector(self.surface.get_width() / 2, self.surface.get_height() / 2)
 
-	# Rotates agent's sprite to face a given angle
-	def rotate(self, angle):
-		self.surface = pygame.transform.rotate(self.originalSurface, angle)
+	# Rotates agent's sprite to face direction of velocity vector
+	def faceVelocity(self):
+		rotationRadians = math.atan2(-self.velocity.denominator, self.velocity.numerator)
+		rotationDegrees = math.degrees(rotationRadians)
+		self.rotate(rotationDegrees - 90)
 
 	# Clamps future position to within world's bounds
 	def clampPosition(self, worldBounds, displacementVector):

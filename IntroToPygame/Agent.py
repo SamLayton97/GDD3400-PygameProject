@@ -10,11 +10,11 @@ class Agent:
 
 	# public variables
 	position = Vector(0, 0)
+	objectCenter = Vector(0, 0)
 	velocity = Vector(0, 0)
 	size = Vector(0, 0)
 	currSpeed = 0
 	maxSpeed = 0
-	objectCenter = Vector(0, 0)
 	color = (0, 0, 0)
 	originalSurface = None
 	surface = None
@@ -61,8 +61,7 @@ class Agent:
 			displacementVector.denominator = 0
 
 		# update agent's position
-		self.position += displacementVector
-		self.objectCenter += displacementVector
+		self.movePosition(displacementVector)
 
 		# rotate agent's sprite to face direction of velocity
 		rotationRadians = math.atan2(-self.velocity.denominator, self.velocity.numerator)
@@ -72,6 +71,11 @@ class Agent:
 		# update agent's collision box and detect collision
 		self.updateCollisionBox()
 		self.collisionDetect(target)
+
+	# Moves object by displacement vector
+	def movePosition(self, displacementVector):
+		self.position += displacementVector
+		self.objectCenter += displacementVector
 
 	# Rotates agent's sprite to face a given angle
 	def rotate(self, angle):
@@ -93,8 +97,6 @@ class Agent:
 			# start no-tag-backs timer
 			pygame.time.set_timer(USEREVENT, Constants.NO_TAG_BACKS_DURATION)
 			self.canTagBack = False
-
-			print("bitch")
 
 	# Draws agents and its velocity at a given position on screen
 	def draw(self, screen):

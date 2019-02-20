@@ -41,7 +41,7 @@ class Sheep(Agent):
 	# Updates sheep's position, running from player-dog if within run range
 	def update(self, target, worldBounds):
 		# calculate distance to target
-		self.interceptPoint = self.position - target.position
+		self.interceptPoint = self.objectCenter - target.objectCenter
 		distToTarget = self.interceptPoint.length()
 
 		# if target is within minimum range, flee

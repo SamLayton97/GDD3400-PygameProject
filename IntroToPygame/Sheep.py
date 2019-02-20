@@ -10,7 +10,7 @@ pygame.init()
 class Sheep(Agent):
 
 	# public variables
-	interceptPoint = Vector(0, 0)
+	fleePoint = Vector(0, 0)
 	neighbors = []
 	herd = []
 
@@ -38,7 +38,7 @@ class Sheep(Agent):
 		# for debugging: draw line from enemy's center to target's center if moving
 		if self.currSpeed != 0:
 			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.numerator, self.objectCenter.denominator),
-					(self.objectCenter.numerator - self.interceptPoint.numerator, self.objectCenter.denominator - self.interceptPoint.denominator), 2)
+					(self.objectCenter.numerator - self.fleePoint.numerator, self.objectCenter.denominator - self.fleePoint.denominator), 2)
 
 		# for debugging: draw line to each sheep in list of neighbors
 		for sheep in self.neighbors:
@@ -49,21 +49,22 @@ class Sheep(Agent):
 		super().draw(screen)
 
 	# Updates sheep's position, running from player-dog if within run range
-	def update(self, target, worldBounds):
+	def update(self, dog, worldBounds):
 		# find neighbors within herd
 		self.findNeighbors(self.herd)
 
-		# calculate distance to target
-		self.interceptPoint = self.objectCenter - target.objectCenter
-		distToTarget = self.interceptPoint.length()
+		# calculate distance to dog
+		self.fleePoint = self.objectCenter - dog.objectCenter
+		distToDog = self.fleePoint.length()
 
-		# if target is within minimum range, flee
-		if distToTarget < Constants.ATTACK_RANGE:
+		# if dog is within minimum range, flee
+		if distToDog < Constants.ATTACK_RANGE:
 			self.currSpeed = self.maxSpeed
-			self.velocity = self.interceptPoint.normalize()
-			super().update(target, worldBounds)
+			self.velocity = self.fleePoint.normalize()
 		else:
 			self.currSpeed = 0
+
+		super().update(dog, worldBounds)
 
 	# from a list of sheep, determine which ones are neighbors
 	def findNeighbors(self, herd):

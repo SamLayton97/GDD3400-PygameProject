@@ -100,16 +100,16 @@ class Sheep(Agent):
 		boundsInfluence = Vector(0, 0)
 
 		# if sheep nears left/right boundaries, calculate vector directly away from those boundaries
-		if self.position.numerator < Constants.SHEEP_BOUNDARY_RADIUS:
-			boundsInfluence.numerator += self.position.numerator
-		elif self.position.numerator > worldBounds.numerator - Constants.SHEEP_BOUNDARY_RADIUS:
-			boundsInfluence.numerator += self.position.numerator - worldBounds.numerator
+		if self.objectCenter.numerator < Constants.SHEEP_BOUNDARY_RADIUS:
+			boundsInfluence.numerator += self.objectCenter.numerator
+		elif self.objectCenter.numerator > worldBounds.numerator - Constants.SHEEP_BOUNDARY_RADIUS:
+			boundsInfluence.numerator += self.objectCenter.numerator - worldBounds.numerator
 
 		# if sheep nears top/bottom boundardies, calculate vector directly away from those boundaries
-		if (self.position.denominator < Constants.SHEEP_BOUNDARY_RADIUS):
-			boundsInfluence.denominator += self.position.denominator
-		elif self.position.denominator > worldBounds.denominator - Constants.SHEEP_BOUNDARY_RADIUS:
-			boundsInfluence.denominator += self.position.denominator - worldBounds.denominator
+		if (self.objectCenter.denominator < Constants.SHEEP_BOUNDARY_RADIUS):
+			boundsInfluence.denominator += self.objectCenter.denominator
+		elif self.objectCenter.denominator > worldBounds.denominator - Constants.SHEEP_BOUNDARY_RADIUS:
+			boundsInfluence.denominator += self.objectCenter.denominator - worldBounds.denominator
 
 		# if bounds influence is not zero vector, normalize it
 		if not (boundsInfluence.numerator == 0 and boundsInfluence.numerator == 0):
@@ -159,7 +159,7 @@ class Sheep(Agent):
 
 		# iterate over each sheep and add distance from self to it to composite cohesion vector
 		for currSheep in self.neighbors:
-			cohesion += currSheep.position - self.position
+			cohesion += currSheep.objectCenter - self.objectCenter
 
 		# if number of neighbors wasn't 0, calculate and normalize vector to neighborhood center of mass
 		if neighborCount > 0:
@@ -178,7 +178,7 @@ class Sheep(Agent):
 
 		# iterate over each neighboring sheep and add distance from self to it to composite separation vector
 		for currSheep in self.neighbors:
-			separation += currSheep.position - self.position
+			separation += currSheep.objectCenter - self.objectCenter
 
 		# if number of neighbors wasn't 0, calculate and normalize vector away from neighborhood center of mass
 		if neighborCount > 0:

@@ -56,9 +56,10 @@ class Sheep(Agent):
 		# calculate composite forces on sheep
 		alignmentInfluence = self.calculateAlignment()
 		cohesionInfluence = self.calculateCohesion()
+		separationInfluence = self.calculateSeparation()
 		dogInfluence = self.calculateDogInfluence(dog)
 		forces = (alignmentInfluence.scale(Constants.SHEEP_ALIGNMENT_WEIGHT) + cohesionInfluence.scale(Constants.SHEEP_COHESION_WEIGHT) + 
-			dogInfluence.scale(Constants.SHEEP_DOG_INFLUENCE_WEIGHT))
+			dogInfluence.scale(Constants.SHEEP_DOG_INFLUENCE_WEIGHT)) + separationInfluence.scale(Constants.SHEEP_SEPERATION_WEIGHT)
 
 		# if external forces influence velocity of sheep
 		if not (forces.numerator == 0 and forces.denominator == 0):
@@ -99,8 +100,7 @@ class Sheep(Agent):
 				# add current sheep to list of neighbors
 				self.neighbors.append(sheep)
 
-
-	# Calculates alignment influence neighboring sheep have on this one.
+	# Calculates alignment influence where this sheep wants to move in same direction as its neighbors.
 	# Note: First aspect of flocking behavior.
 	def calculateAlignment(self):
 		# define vector to keep track of neighbor velocities
@@ -113,27 +113,46 @@ class Sheep(Agent):
 
 		# if the number of neighbors wasn't 0, normalize alignment vector
 		if neighborCount > 0:
+			alignment = alignment.scale(1 / neighborCount)
 			alignment = alignment.normalize()
 
 		# return alignment influence vector
 		return alignment
 
-	# Calculates cohesion influence neighboring sheep have on this one.
+	# Calculates cohesion influence where this sheep likes to cluster with other sheep.
 	# Note: Second aspect of flocking behavior.
 	def calculateCohesion(self):
 		# define vector to keep track of neighbor positions
 		cohesion = Vector(0, 0)
 		neighborCount = len(self.neighbors)
 
-		# iterate over each sheep and add its position to composite cohesion vector
+		# iterate over each sheep and add distance from self to it to composite cohesion vector
 		for currSheep in self.neighbors:
-			cohesion += currSheep.position
+			cohesion += currSheep.position - self.position
 
-		# if number of neighbors wasn't 0, calculate and normalize vector to neighbor center of mass
+		# if number of neighbors wasn't 0, calculate and normalize vector to neighborhood center of mass
 		if neighborCount > 0:
 			cohesion = cohesion.scale(1 / neighborCount)
-			cohesion = Vector(cohesion.numerator - self.position.numerator, cohesion.denominator - self.position.denominator)
 			cohesion = cohesion.normalize()
 
 		# return cohesion influence vector
 		return cohesion
+
+	# Calculates separation influence where this sheep likes to stay a sheep's length away from its neighbors.
+	# Note: Third aspect of flocking behavior.
+	def calculateSeparation(self):
+		# define vector to track neighbors' positions
+		separation = Vector(0, 0)
+		neighborCount = len(self.neighbors)
+
+		# iterate over each neighboring sheep and add distance from self to it to composite separation vector
+		for currSheep in self.neighbors:
+			separation += currSheep.position - self.position
+
+		# if number of neighbors wasn't 0, calculate and normalize vector away from neighborhood center of mass
+		if neighborCount > 0:
+			separation = separation.scale(-1 / neighborCount)
+			separation = separation.normalize()
+
+		# return separation influence vector
+		return separation

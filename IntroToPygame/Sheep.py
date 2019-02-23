@@ -53,13 +53,16 @@ class Sheep(Agent):
 		# find neighbors within herd
 		self.findNeighbors(self.herd)
 
-		# calculate composite forces on sheep
+		# calculate each force affecting sheep
 		alignmentInfluence = self.calculateAlignment()
 		cohesionInfluence = self.calculateCohesion()
 		separationInfluence = self.calculateSeparation()
 		dogInfluence = self.calculateDogInfluence(dog)
+		boundsInfluence = self.calculateBoundaryInfluence(worldBounds)
+
+		# combine individual forces into composite force
 		forces = (alignmentInfluence.scale(Constants.SHEEP_ALIGNMENT_WEIGHT) + cohesionInfluence.scale(Constants.SHEEP_COHESION_WEIGHT) + 
-			dogInfluence.scale(Constants.SHEEP_DOG_INFLUENCE_WEIGHT)) + separationInfluence.scale(Constants.SHEEP_SEPERATION_WEIGHT)
+			dogInfluence.scale(Constants.SHEEP_DOG_INFLUENCE_WEIGHT)) + separationInfluence.scale(Constants.SHEEP_SEPERATION_WEIGHT) + boundsInfluence.scale(Constants.SHEEP_BOUNDARY_INFLUENCE_WEIGHT)
 
 		# if external forces influence velocity of sheep
 		if not (forces.numerator == 0 and forces.denominator == 0):
@@ -77,7 +80,7 @@ class Sheep(Agent):
 	# Calculates influence force of dog's proximity on sheep's velocity
 	# and returns velocity moving away from the dog
 	def calculateDogInfluence(self, dog):
-		# define vector to hold vector away from dog
+		# define vector to hold velocity away from dog
 		dogInfluence = Vector(0, 0)
 
 		# if the dog is within attack range
@@ -91,8 +94,28 @@ class Sheep(Agent):
 
 	# Calculates influence force of world bounds on sheep's velocity,
 	# pushing the agent away from screen edges and corners
-	def calculateBoundaryInfluence():
-		return 0
+	def calculateBoundaryInfluence(self, worldBounds):
+		# define vector to hold velocity away from screen bounds
+		boundsInfluence = Vector(0, 0)
+
+		# if sheep nears left/right boundaries, calculate vector directly away from those boundaries
+		if self.position.numerator < Constants.SHEEP_BOUNDARY_RADIUS:
+			boundsInfluence.numerator += self.position.numerator
+		elif self.position.numerator > worldBounds.numerator - Constants.SHEEP_BOUNDARY_RADIUS:
+			boundsInfluence.numerator += self.position.numerator - worldBounds.numerator
+
+		# if sheep nears top/bottom boundardies, calculate vector directly away from those boundaries
+		if (self.position.denominator < Constants.SHEEP_BOUNDARY_RADIUS):
+			boundsInfluence.denominator += self.position.denominator
+		elif self.position.denominator > worldBounds.denominator - Constants.SHEEP_BOUNDARY_RADIUS:
+			boundsInfluence.denominator += self.position.denominator - worldBounds.denominator
+
+		# if bounds influence is not zero vector, normalize it
+		if not (boundsInfluence.numerator == 0 and boundsInfluence.numerator == 0):
+			boundsInfluence = boundsInfluence.normalize()
+
+		# return normalized boundary influence force
+		return boundsInfluence
 
 	# from a list of sheep, determine which ones are neighbors
 	def findNeighbors(self, herd):

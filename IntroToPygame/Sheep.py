@@ -75,7 +75,9 @@ class Sheep(Agent):
 		super().update(dog, worldBounds)
 
 	# Calculates influence force of dog's proximity on sheep's velocity
+	# and returns velocity moving away from the dog
 	def calculateDogInfluence(self, dog):
+		# define vector to hold vector away from dog
 		dogInfluence = Vector(0, 0)
 
 		# if the dog is within attack range
@@ -86,6 +88,11 @@ class Sheep(Agent):
 
 		# return normalized dog-influence vector
 		return dogInfluence
+
+	# Calculates influence force of world bounds on sheep's velocity,
+	# pushing the agent away from screen edges and corners
+	def calculateBoundaryInfluence():
+		return 0
 
 	# from a list of sheep, determine which ones are neighbors
 	def findNeighbors(self, herd):

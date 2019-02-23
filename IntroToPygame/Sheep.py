@@ -35,15 +35,16 @@ class Sheep(Agent):
 
 	# Draws vision-detection line on top of drawing itself and its vector line
 	def draw(self, screen, dog):
-		# for debugging: draw line from enemy's center to target's center if moving
-		if self.currSpeed != 0:
+		# for debugging: draw line from sheep to dog's center if distance between them is less than attack range
+		distanceVector = self.position - dog.position
+		if distanceVector.length() < Constants.ATTACK_RANGE:
 			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.numerator, self.objectCenter.denominator),
-					(dog.objectCenter.numerator, dog.objectCenter.denominator), 2)
+					(dog.objectCenter.numerator, dog.objectCenter.denominator), 1)
 
 		# for debugging: draw line to each sheep in list of neighbors
 		for sheep in self.neighbors:
 			pygame.draw.line(screen, pygame.Color(0, 0, 255), (self.objectCenter.numerator, self.objectCenter.denominator),
-					(sheep.objectCenter.numerator, sheep.objectCenter.denominator), 2)
+					(sheep.objectCenter.numerator, sheep.objectCenter.denominator), 1)
 
 		# draw self and vector line
 		super().draw(screen)

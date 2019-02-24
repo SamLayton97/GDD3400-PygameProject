@@ -11,6 +11,7 @@ class Sheep(Agent):
 
 	# public variables
 	fleePoint = Vector(0, 0)
+	closestBoundPoint = Vector(0, 0)
 	neighbors = []
 	herd = []
 
@@ -47,6 +48,11 @@ class Sheep(Agent):
 			for sheep in self.neighbors:
 				pygame.draw.line(screen, pygame.Color(0, 0, 255), (self.objectCenter.numerator, self.objectCenter.denominator),
 						(sheep.objectCenter.numerator, sheep.objectCenter.denominator), Constants.DEBUG_LINE_WIDTH)
+
+		# for debugging: draw line to closest boundary point (only if agent is close enough for bounds to influence agent's velocity)
+		if Constants.DEBUG_BOUNDARY_INFLUENCE and not (self.closestBoundPoint.numerator == self.objectCenter.numerator and self.closestBoundPoint.denominator == self.objectCenter.denominator):
+			pygame.draw.line(screen, pygame.Color(255, 0, 255), (self.objectCenter.numerator, self.objectCenter.denominator),
+					(self.closestBoundPoint.numerator, self.closestBoundPoint.denominator), Constants.DEBUG_LINE_WIDTH)
 
 		# draw self and vector line
 		super().draw(screen)
@@ -113,11 +119,14 @@ class Sheep(Agent):
 		elif self.objectCenter.denominator > worldBounds.denominator - Constants.SHEEP_BOUNDARY_RADIUS:
 			boundsInfluence.denominator += self.objectCenter.denominator - worldBounds.denominator
 
+		# update agent's closest bound point
+		self.closestBoundPoint = self.objectCenter - boundsInfluence
+
 		# if bounds influence is not zero vector, normalize it
 		if not (boundsInfluence.numerator == 0 and boundsInfluence.numerator == 0):
 			boundsInfluence = boundsInfluence.normalize()
 
-		# return normalized boundary influence force
+		# return bounds influence
 		return boundsInfluence
 
 	# from a list of sheep, determine which ones are neighbors

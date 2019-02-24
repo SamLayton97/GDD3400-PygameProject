@@ -127,10 +127,10 @@ class Agent:
 
 		# for debugging: draw bounding rectangle of agent's sprite surface
 		if Constants.DEBUG_BOUNDING_RECTS:
-			pygame.draw.rect(screen, self.color, self.collisionBox, 2)
+			pygame.draw.rect(screen, self.color, self.collisionBox, Constants.DEBUG_LINE_WIDTH)
 
 		# for debugging: draw line pointing in direction of agent's velocity
 		if Constants.DEBUG_VELOCITY:
 			drawVector = self.velocity.scale(30)
 			pygame.draw.line(screen, pygame.Color(0, 255, 0, 255), (self.objectCenter.numerator, self.objectCenter.denominator), 
-					   (self.objectCenter.numerator + drawVector.numerator, self.objectCenter.denominator + drawVector.denominator), 2)
+					   (self.objectCenter.numerator + drawVector.numerator, self.objectCenter.denominator + drawVector.denominator), Constants.DEBUG_LINE_WIDTH)

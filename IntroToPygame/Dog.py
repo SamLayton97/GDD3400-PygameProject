@@ -7,10 +7,10 @@ pygame.init()
 # A player-controlled sheep-herding dog
 class Dog(Agent):
 
-    # Moves player-object in response to player-input (WASD),
-    # and updates velocity vector accordingly
+	# Moves player-object in response to player-input (WASD),
+	# and updates velocity vector accordingly
 	def update(self, target, worldBounds):
-        # determine un-normalized movement vector according to player-input
+		# determine un-normalized movement vector according to player-input
 		xInput = 0
 		yInput = 0
 		pressed = pygame.key.get_pressed()

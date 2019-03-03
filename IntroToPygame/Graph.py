@@ -118,9 +118,9 @@ class Graph():
 		searchQueue.append(start)
 		start.isVisited = True
 
-		# while there are node in queue to explore
-		while len(searchQueue) > 0:
-			# remove current (first) node from queue
+		# while there are node in queue to explore (i.e., while path could still exist)
+		while searchQueue:
+			# remove first node from queue
 			currNode = searchQueue.pop(0)
 			currNode.isExplored = True
 
@@ -142,9 +142,33 @@ class Graph():
 		print("DJIKSTRA")
 		self.reset()		
 
-		# TODO: Add your Djikstra code here!
+		# create priority queue of nodes and add/'visit' starting node
+		priorityQueue = []
+		priorityQueue.append(start)
+		start.isVisited = True
 
-		return []
+		# while there are node in queue to explore (i.e., while path could still exist)
+		while priorityQueue:
+			# remove first node from queue
+			currNode = priorityQueue.pop(0)
+			currNode.isExplored = True
+
+			# if current node is goal, return path from it
+			if currNode == end:
+				return self.buildPath(currNode)
+
+			# iterate over neighboring nodes
+			for currNeighbor in currNode.neighbors:
+				# if current neighbor wasn't visited yet
+				if not currNeighbor.isVisited:
+					# 'visit' node / push it onto queue
+					priorityQueue.append(currNeighbor)
+					currNeighbor.isVisited = True
+					currNeighbor.backNode = currNode
+
+					# TODO: calculate cost to this node
+
+
 
 	def findPath_AStar(self, start, end):
 		""" A Star Search """

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "IntroToPygame", "IntroToPygame\IntroToPygame.pyproj", "{D6531ABC-7883-4F4A-8ECE-0A5A7B8476A8}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "HuntingSheep", "IntroToPygame\HuntingSheep.pyproj", "{D6531ABC-7883-4F4A-8ECE-0A5A7B8476A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

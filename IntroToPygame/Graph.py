@@ -9,6 +9,7 @@ from Node import *
 from enum import Enum
 
 class SearchType(Enum):
+	BREADTH = 0
 	DJIKSTRA = 1
 	A_STAR = 2
 	BEST_FIRST = 3

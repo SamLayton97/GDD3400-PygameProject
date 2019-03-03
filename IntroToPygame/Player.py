@@ -1,5 +1,6 @@
 from Vector import *
 from Agent import *
+from Node import *
 from Graph import *
 import pygame
 from pygame.locals import *
@@ -29,6 +30,10 @@ class Player(Agent):
 
 		# if dog-agent has no current path to follow
 		if not self.currPath:
+			# find node closest agent's position [start node] and sheep's position [end node]
+			startNode = graph.getNodeFromPoint(self.objectCenter)
+			endNode = graph.getNodeFromPoint(herd[0].objectCenter)
+
 			# generate new path according to chosen pathfinding algorithm
 			if self.searchType == SearchType.BREADTH_FIRST:
 				print("breadth")

@@ -4,43 +4,43 @@ import math
 class Vector:
 
 	# public variables
-	numerator = 0
-	denominator = 0
+	x = 0
+	y = 0
 
 	# constructor
 	def __init__(self, numerator, denominator):
-		self.numerator = numerator
-		self.denominator = denominator
+		self.x = numerator
+		self.y = denominator
 
 	# converts the vector to a printable string
 	def __str__(self):
-		return "Vector (" + str(self.numerator) + ", " + str(self.denominator) + ")"
+		return "Vector (" + str(self.x) + ", " + str(self.y) + ")"
 
 	# adds vector with another
 	def __add__(self, other):
-		deltaX = self.numerator + other.numerator
-		deltaY = self.denominator + other.denominator
+		deltaX = self.x + other.y
+		deltaY = self.x + other.y
 		return Vector(deltaX, deltaY)
 
 	# subtracts other vector from this vector
 	def __sub__(self, other):
-		deltaX = self.numerator - other.numerator
-		deltaY = self.denominator - other.denominator
+		deltaX = self.x - other.x
+		deltaY = self.y - other.y
 		return Vector(deltaX, deltaY)
 
 	# calculates dot product of this and another vector
 	def dot(self, other):
-		return (self.numerator * other.numerator) + (self.denominator * other.denominator)
+		return (self.x * other.x) + (self.y * other.y)
 
 	# scales this vector by a value
 	def scale(self, scalar):
-		return Vector(self.numerator * scalar, self.denominator * scalar)
+		return Vector(self.x * scalar, self.y * scalar)
 
 	# returns length of the vector
 	def length(self):
-		return math.sqrt((self.numerator ** 2) + (self.denominator ** 2))
+		return math.sqrt((self.x ** 2) + (self.y ** 2))
 
 	# returns a normalized vector with same direction as this one
 	def normalize(self):
 		vectorLength = self.length()
-		return Vector(self.numerator / vectorLength, self.denominator / vectorLength)
+		return Vector(self.x / vectorLength, self.y / vectorLength)

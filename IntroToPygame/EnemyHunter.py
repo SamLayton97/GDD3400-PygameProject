@@ -14,9 +14,9 @@ class EnemyHunter(Agent):
 	# Draws vision-detection line on top of drawing itself and its vector line
 	def draw(self, screen):
 		# for debugging: draw line from enemy's center to where target is moving
-		if self.velocity.numerator != 0 or self.velocity.denominator != 0:
-			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.numerator, self.objectCenter.denominator),
-					(self.interceptPoint.numerator, self.interceptPoint.denominator), 3)
+		if self.velocity.x != 0 or self.velocity.y != 0:
+			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.x, self.objectCenter.y),
+					(self.interceptPoint.x, self.interceptPoint.y), 3)
 
 		# draw self and vector line
 		super().draw(screen)

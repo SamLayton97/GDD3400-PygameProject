@@ -40,19 +40,19 @@ class Sheep(Agent):
 		if Constants.DEBUG_DOG_INFLUENCE:
 			distanceVector = self.position - dog.position
 			if distanceVector.length() < Constants.ATTACK_RANGE:
-				pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.numerator, self.objectCenter.denominator),
-						(dog.objectCenter.numerator, dog.objectCenter.denominator), Constants.DEBUG_LINE_WIDTH)
+				pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.x, self.objectCenter.y),
+						(dog.objectCenter.x, dog.objectCenter.y), Constants.DEBUG_LINE_WIDTH)
 
 		# for debugging: draw line to each sheep in list of neighbors
 		if Constants.DEBUG_NEIGHBORS:
 			for sheep in self.neighbors:
-				pygame.draw.line(screen, pygame.Color(0, 0, 255), (self.objectCenter.numerator, self.objectCenter.denominator),
-						(sheep.objectCenter.numerator, sheep.objectCenter.denominator), Constants.DEBUG_LINE_WIDTH)
+				pygame.draw.line(screen, pygame.Color(0, 0, 255), (self.objectCenter.x, self.objectCenter.y),
+						(sheep.objectCenter.x, sheep.objectCenter.y), Constants.DEBUG_LINE_WIDTH)
 
 		# for debugging: draw line to closest boundary point (only if agent is close enough for bounds to influence agent's velocity)
-		if Constants.DEBUG_BOUNDARY_INFLUENCE and not (self.closestBoundPoint.numerator == self.objectCenter.numerator and self.closestBoundPoint.denominator == self.objectCenter.denominator):
-			pygame.draw.line(screen, pygame.Color(255, 0, 255), (self.objectCenter.numerator, self.objectCenter.denominator),
-					(self.closestBoundPoint.numerator, self.closestBoundPoint.denominator), Constants.DEBUG_LINE_WIDTH)
+		if Constants.DEBUG_BOUNDARY_INFLUENCE and not (self.closestBoundPoint.x == self.objectCenter.x and self.closestBoundPoint.y == self.objectCenter.y):
+			pygame.draw.line(screen, pygame.Color(255, 0, 255), (self.objectCenter.x, self.objectCenter.y),
+					(self.closestBoundPoint.x, self.closestBoundPoint.y), Constants.DEBUG_LINE_WIDTH)
 
 		# draw self and vector line
 		super().draw(screen)
@@ -74,7 +74,7 @@ class Sheep(Agent):
 			dogInfluence.scale(Constants.SHEEP_DOG_INFLUENCE_WEIGHT)) + separationInfluence.scale(Constants.SHEEP_SEPERATION_WEIGHT) + boundsInfluence.scale(Constants.SHEEP_BOUNDARY_INFLUENCE_WEIGHT)
 
 		# if external forces influence velocity of sheep
-		if not (forces.numerator == 0 and forces.denominator == 0):
+		if not (forces.x == 0 and forces.y == 0):
 			# increase sheep's speed
 			self.currSpeed = self.maxSpeed
 
@@ -108,22 +108,22 @@ class Sheep(Agent):
 		boundsInfluence = Vector(0, 0)
 
 		# if sheep nears left/right boundaries, calculate vector directly away from those boundaries
-		if self.objectCenter.numerator < Constants.SHEEP_BOUNDARY_RADIUS:
-			boundsInfluence.numerator += self.objectCenter.numerator
-		elif self.objectCenter.numerator > worldBounds.numerator - Constants.SHEEP_BOUNDARY_RADIUS:
-			boundsInfluence.numerator += self.objectCenter.numerator - worldBounds.numerator
+		if self.objectCenter.x < Constants.SHEEP_BOUNDARY_RADIUS:
+			boundsInfluence.x += self.objectCenter.x
+		elif self.objectCenter.x > worldBounds.x - Constants.SHEEP_BOUNDARY_RADIUS:
+			boundsInfluence.x += self.objectCenter.x - worldBounds.x
 
 		# if sheep nears top/bottom boundardies, calculate vector directly away from those boundaries
-		if (self.objectCenter.denominator < Constants.SHEEP_BOUNDARY_RADIUS):
-			boundsInfluence.denominator += self.objectCenter.denominator
-		elif self.objectCenter.denominator > worldBounds.denominator - Constants.SHEEP_BOUNDARY_RADIUS:
-			boundsInfluence.denominator += self.objectCenter.denominator - worldBounds.denominator
+		if (self.objectCenter.y < Constants.SHEEP_BOUNDARY_RADIUS):
+			boundsInfluence.y += self.objectCenter.y
+		elif self.objectCenter.y > worldBounds.y - Constants.SHEEP_BOUNDARY_RADIUS:
+			boundsInfluence.y += self.objectCenter.y - worldBounds.y
 
 		# update agent's closest bound point
 		self.closestBoundPoint = self.objectCenter - boundsInfluence
 
 		# if bounds influence is not zero vector, normalize it
-		if not (boundsInfluence.numerator == 0 and boundsInfluence.numerator == 0):
+		if not (boundsInfluence.x == 0 and boundsInfluence.x == 0):
 			boundsInfluence = boundsInfluence.normalize()
 
 		# return bounds influence

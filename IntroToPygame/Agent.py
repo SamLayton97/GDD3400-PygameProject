@@ -28,7 +28,7 @@ class Agent:
 	def __init__(self, position, size, maxSpeed, color, surface):
 		# set variables to appropriate parameters
 		self.position = position
-		self.size = Vector(size.numerator, size.denominator)
+		self.size = Vector(size.x, size.y)
 		self.maxSpeed = maxSpeed
 		self.color = color
 		self.originalSurface = surface
@@ -42,9 +42,9 @@ class Agent:
 	# center (in world coordinates) for debugging
 	def __str__(self):
 		stringSize = "Size: " + str(self.size) + "\n"
-		stringPosition = "Position: (" + str(self.position.numerator) + ", " + str(self.position.denominator) + ")\n"
-		stringVelocity = "Velocity: (" + str(self.velocity.numerator) + ", " + str(self.velocity.denominator) + ")\n"
-		stringCenter = "Center: (" + str(self.objectCenter.numerator) + ", " + str(self.objectCenter.denominator) + ")\n"
+		stringPosition = "Position: (" + str(self.position.x) + ", " + str(self.position.y) + ")\n"
+		stringVelocity = "Velocity: (" + str(self.velocity.x) + ", " + str(self.velocity.y) + ")\n"
+		stringCenter = "Center: (" + str(self.objectCenter.x) + ", " + str(self.objectCenter.y) + ")\n"
 		return stringSize + stringPosition + stringVelocity + stringCenter
 
 	# Updates agent's position and collision box
@@ -71,14 +71,14 @@ class Agent:
 	# Clamps future position to within world's bounds
 	def clampPosition(self, worldBounds, displacementVector):
 		# ignoring world bounds, calculate future position of agent after displacement
-		futureX = displacementVector.numerator + self.objectCenter.numerator
-		futureY = displacementVector.denominator + self.objectCenter.denominator
+		futureX = displacementVector.x + self.objectCenter.x
+		futureY = displacementVector.y + self.objectCenter.y
 
 		# if future position exceeds world bounds, clamp displacement
-		if (futureX < self.surface.get_width() / 2) or (futureX > worldBounds.numerator - self.surface.get_width() / 2):
-			displacementVector.numerator = 0
-		if (futureY < self.surface.get_height() / 2) or (futureY > worldBounds.denominator - self.surface.get_height() / 2):
-			displacementVector.denominator = 0
+		if (futureX < self.surface.get_width() / 2) or (futureX > worldBounds.x - self.surface.get_width() / 2):
+			displacementVector.x = 0
+		if (futureY < self.surface.get_height() / 2) or (futureY > worldBounds.y - self.surface.get_height() / 2):
+			displacementVector.y = 0
 
 		# return clamped displacement vector
 		return displacementVector
@@ -94,7 +94,7 @@ class Agent:
 
 	# Rotates agent's sprite to face direction of velocity vector
 	def faceVelocity(self):
-		rotationRadians = math.atan2(-self.velocity.denominator, self.velocity.numerator)
+		rotationRadians = math.atan2(-self.velocity.y, self.velocity.x)
 		rotationDegrees = math.degrees(rotationRadians)
 		self.rotate(rotationDegrees - 90)
 
@@ -106,7 +106,7 @@ class Agent:
 	# Updates collision box according to bounding box of agent's sprite
 	def updateCollisionBox(self):
 		self.collisionBox = self.surface.get_bounding_rect()
-		self.collisionBox = self.collisionBox.move(self.position.numerator, self.position.denominator)
+		self.collisionBox = self.collisionBox.move(self.position.x, self.position.y)
 
 	# Detects whether agent has collided with another,
 	# and changes ai behaviors accordingly
@@ -123,7 +123,7 @@ class Agent:
 	# Draws agents and its velocity at a given position on screen
 	def draw(self, screen):
 		# draw agent's sprite
-		screen.blit(self.surface, (self.position.numerator, self.position.denominator))
+		screen.blit(self.surface, (self.position.x, self.position.y))
 
 		# for debugging: draw bounding rectangle of agent's sprite surface
 		if Constants.DEBUG_BOUNDING_RECTS:
@@ -132,5 +132,5 @@ class Agent:
 		# for debugging: draw line pointing in direction of agent's velocity
 		if Constants.DEBUG_VELOCITY:
 			drawVector = self.velocity.scale(30)
-			pygame.draw.line(screen, pygame.Color(0, 255, 0, 255), (self.objectCenter.numerator, self.objectCenter.denominator), 
-					   (self.objectCenter.numerator + drawVector.numerator, self.objectCenter.denominator + drawVector.denominator), Constants.DEBUG_LINE_WIDTH)
+			pygame.draw.line(screen, pygame.Color(0, 255, 0, 255), (self.objectCenter.x, self.objectCenter.y), 
+					   (self.objectCenter.x + drawVector.x, self.objectCenter.y + drawVector.y), Constants.DEBUG_LINE_WIDTH)

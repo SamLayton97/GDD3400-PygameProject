@@ -96,6 +96,7 @@ class Graph():
 		path = []
 		node = endNode
 		while node is not 0:
+			print(str(node.center))
 			node.isPath = True
 			path = [node] + path
 			node = node.backNode
@@ -116,7 +117,7 @@ class Graph():
 		# create queue of nodes and add/'visit' starting node
 		searchQueue = []
 		searchQueue.append(start)
-		start.isStart = True
+		start.isVisited = True
 
 		# while there are node in queue to explore
 		while len(searchQueue) > 0:
@@ -137,6 +138,7 @@ class Graph():
 					if currNeighbor == end:
 						print("found: " + str(currNeighbor.center))
 						print("expected: " + str(end.center))
+						return self.buildPath(currNeighbor)
 
 	def findPath_Djikstra(self, start, end):
 		""" Djikstra's Search """

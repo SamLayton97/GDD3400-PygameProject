@@ -30,8 +30,8 @@ class Player(Agent):
 			self.searchType = SearchType.BREADTH_FIRST
 
 			# DEBUGGING: find path from two random points on grid
-			debugStart = graph.nodes[0][0]
-			debugEnd = graph.nodes[5][5]
+			debugStart = graph.nodes[random.randint(0, graph.gridHeight - 1)][random.randint(0, graph.gridWidth - 1)]
+			debugEnd = graph.nodes[random.randint(0, graph.gridHeight - 1)][random.randint(0, graph.gridWidth - 1)]
 			graph.findPath_Breadth(debugStart, debugEnd)
 
 		# if dog has no path to follow

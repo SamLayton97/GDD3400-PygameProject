@@ -142,10 +142,13 @@ class Graph():
 		print("DJIKSTRA")
 		self.reset()		
 
-		# create priority queue of nodes and add/'visit' starting node
+		# create priority queue of nodes
 		priorityQueue = []
+
+		# add/'visit' starting node and set its cost to 0
 		priorityQueue.append(start)
 		start.isVisited = True
+		start.cost = 0
 
 		# while there are node in queue to explore (i.e., while path could still exist)
 		while priorityQueue:
@@ -166,8 +169,9 @@ class Graph():
 					currNeighbor.isVisited = True
 					currNeighbor.backNode = currNode
 
-					# TODO: calculate cost to this node
-
+					# calculate and set cost to this node
+					fromCurrToNeighbor = currNeighbor.center - currNode.center
+					currNeighbor.cost = currNode.cost + (fromCurrToNeighbor.length() / Constants.GRID_SIZE)
 
 
 	def findPath_AStar(self, start, end):

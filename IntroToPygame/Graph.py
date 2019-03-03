@@ -113,9 +113,30 @@ class Graph():
 		print("BREADTH-FIRST")
 		self.reset()
 
-		# TODO: Add your breadth-first code here!
+		# create queue of nodes and add/'visit' starting node
+		searchQueue = []
+		searchQueue.append(start)
+		start.isStart = True
 
-		return []
+		# while there are node in queue to explore
+		while len(searchQueue) > 0:
+			# remove current (first) node from queue
+			currNode = searchQueue.pop(0)
+			currNode.isExplored = True
+
+			# iterate over node's neighbors
+			for currNeighbor in currNode.neighbors:
+				# if search hasn't visited current neighbor
+				if not currNeighbor.isVisited:
+					# add neighbor to queue (i.e., visit neighbor) and set back pointer to current node
+					searchQueue.append(currNeighbor)
+					currNeighbor.isVisited = True
+					currNeighbor.backNode = currNode
+
+					# if current neighbor is the goal, build path from said node
+					if currNeighbor == end:
+						print("found: " + str(currNeighbor.center))
+						print("expected: " + str(end.center))
 
 	def findPath_Djikstra(self, start, end):
 		""" Djikstra's Search """

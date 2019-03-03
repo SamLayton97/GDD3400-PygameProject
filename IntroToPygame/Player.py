@@ -2,6 +2,7 @@ from Vector import *
 from Agent import *
 from Node import *
 from Graph import *
+import random
 import pygame
 from pygame.locals import *
 pygame.init()
@@ -28,32 +29,37 @@ class Player(Agent):
 		elif pressed[K_f]:
 			self.searchType = SearchType.BREADTH_FIRST
 
+			# DEBUGGING: find path from two random points on grid
+			debugStart = graph.nodes[0][0]
+			debugEnd = graph.nodes[5][5]
+			graph.findPath_Breadth(debugStart, debugEnd)
+
 		# if dog has no path to follow
-		if not self.currPath:
-			# find node closest agent's position [start node] and sheep's position [end node]
-			dogNode = graph.getNodeFromPoint(self.objectCenter)
-			sheepNode = graph.getNodeFromPoint(herd[0].objectCenter)
+		#if not self.currPath:
+		#	# find node closest agent's position [start node] and sheep's position [end node]
+		#	dogNode = graph.getNodeFromPoint(self.objectCenter)
+		#	sheepNode = graph.getNodeFromPoint(herd[0].objectCenter)
 
-			# generate new path according to chosen pathfinding algorithm
-			if self.searchType == SearchType.BREADTH_FIRST:
-				self.currPath = graph.findPath_Breadth(dogNode, sheepNode)
-			elif self.searchType == SearchType.DJIKSTRA:
-				self.currPath = graph.findPath_Djikstra(dogNode, sheepNode)
-			elif self.searchType == SearchType.A_STAR:
-				self.currPath = graph.findPath_AStar(dogNode, sheepNode)
-			else:
-				self.currPath = graph.findPath_BestFirst(dogNode, sheepNode)
-		# if agent does have path to follow
-		else:
-			# aim agent's velocity towards next node
-			nextNodeVector = self.currPath[0].center - self.objectCenter
-			self.velocity = nextNodeVector.normalize()
+		#	# generate new path according to chosen pathfinding algorithm
+		#	if self.searchType == SearchType.BREADTH_FIRST:
+		#		self.currPath = graph.findPath_Breadth(dogNode, sheepNode)
+		#	elif self.searchType == SearchType.DJIKSTRA:
+		#		self.currPath = graph.findPath_Djikstra(dogNode, sheepNode)
+		#	elif self.searchType == SearchType.A_STAR:
+		#		self.currPath = graph.findPath_AStar(dogNode, sheepNode)
+		#	else:
+		#		self.currPath = graph.findPath_BestFirst(dogNode, sheepNode)
+		## if agent does have path to follow
+		#else:
+		#	# aim agent's velocity towards next node
+		#	nextNodeVector = self.currPath[0].center - self.objectCenter
+		#	self.velocity = nextNodeVector.normalize()
 
-			# if agent is close to next node they're travelling to
-			nodeProximityVector = self.currPath[0].center - self.objectCenter
-			if nodeProximityVector < Constants.GRID_SIZE / 5:
-				# pop node from list
-				currPath.pop(0)
+		#	# if agent is close to next node they're travelling to
+		#	nodeProximityVector = self.currPath[0].center - self.objectCenter
+		#	if nodeProximityVector < Constants.GRID_SIZE / 5:
+		#		# pop node from list
+		#		currPath.pop(0)
 
 		# move dog agent
 		super().update(worldBounds)

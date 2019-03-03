@@ -96,7 +96,6 @@ class Graph():
 		path = []
 		node = endNode
 		while node is not 0:
-			print(str(node.center))
 			node.isPath = True
 			path = [node] + path
 			node = node.backNode
@@ -136,8 +135,6 @@ class Graph():
 
 					# if current neighbor is the goal, build path from said node
 					if currNeighbor == end:
-						print("found: " + str(currNeighbor.center))
-						print("expected: " + str(end.center))
 						return self.buildPath(currNeighbor)
 
 	def findPath_Djikstra(self, start, end):

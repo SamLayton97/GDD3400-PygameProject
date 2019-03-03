@@ -8,9 +8,9 @@ class Vector:
 	y = 0
 
 	# constructor
-	def __init__(self, numerator, denominator):
-		self.x = numerator
-		self.y = denominator
+	def __init__(self, x, y):
+		self.x = x
+		self.y = y
 
 	# converts the vector to a printable string
 	def __str__(self):
@@ -18,8 +18,8 @@ class Vector:
 
 	# adds vector with another
 	def __add__(self, other):
-		deltaX = self.x + other.y
-		deltaY = self.x + other.y
+		deltaX = self.x + other.x
+		deltaY = self.y + other.y
 		return Vector(deltaX, deltaY)
 
 	# subtracts other vector from this vector

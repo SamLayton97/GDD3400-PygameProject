@@ -16,7 +16,7 @@ class Player(Agent):
 	# Moves dog agent along generated path and changes path-finding
 	# algorithm according to user input.
 	def update(self, worldBounds, graph, herd, gates):
-		
+
 		# change pathfinding search type if user presses corresponding button
 		pressed = pygame.key.get_pressed()
 		if pressed[K_a]:
@@ -28,21 +28,32 @@ class Player(Agent):
 		elif pressed[K_f]:
 			self.searchType = SearchType.BREADTH_FIRST
 
-		# if dog-agent has no current path to follow
+		# if dog has no path to follow
 		if not self.currPath:
 			# find node closest agent's position [start node] and sheep's position [end node]
-			startNode = graph.getNodeFromPoint(self.objectCenter)
-			endNode = graph.getNodeFromPoint(herd[0].objectCenter)
+			dogNode = graph.getNodeFromPoint(self.objectCenter)
+			sheepNode = graph.getNodeFromPoint(herd[0].objectCenter)
 
 			# generate new path according to chosen pathfinding algorithm
 			if self.searchType == SearchType.BREADTH_FIRST:
-				print("breadth")
+				self.currPath = graph.findPath_Breadth(dogNode, sheepNode)
 			elif self.searchType == SearchType.DJIKSTRA:
-				print("djikstra")
+				self.currPath = graph.findPath_Djikstra(dogNode, sheepNode)
 			elif self.searchType == SearchType.A_STAR:
-				print("a*")
+				self.currPath = graph.findPath_AStar(dogNode, sheepNode)
 			else:
-				print("best")
+				self.currPath = graph.findPath_BestFirst(dogNode, sheepNode)
+		# if agent does have path to follow
+		else:
+			# aim agent's velocity towards next node
+			nextNodeVector = self.currPath[0].center - self.objectCenter
+			self.velocity = nextNodeVector.normalize()
+
+			# if agent is close to next node they're travelling to
+			nodeProximityVector = self.currPath[0].center - self.objectCenter
+			if nodeProximityVector < Constants.GRID_SIZE / 5:
+				# pop node from list
+				currPath.pop(0)
 
 		# move dog agent
-		#super().update(worldBounds)
+		super().update(worldBounds)

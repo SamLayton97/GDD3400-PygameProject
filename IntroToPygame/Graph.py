@@ -172,6 +172,16 @@ class Graph():
 					# calculate and set cost to this node
 					fromCurrToNeighbor = currNeighbor.center - currNode.center
 					currNeighbor.cost = currNode.cost + (fromCurrToNeighbor.length() / Constants.GRID_SIZE)
+				# if current neighbor has been visited
+				else:
+					# update cost if cost from curren node is less than existing cost
+					fromCurrToNeighbor = currNeighbor.center - currNode.center
+					newCost = fromCurrToNeighbor.length()
+					if newCost < currNeighbor.cost:
+						currNeighbor.cost = newCost
+
+			# re-sort priority queue from lowest to highest cost
+			priorityQueue.sort(key=lambda x: x.cost)
 
 
 	def findPath_AStar(self, start, end):

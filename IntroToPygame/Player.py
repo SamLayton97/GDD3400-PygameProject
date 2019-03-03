@@ -12,7 +12,7 @@ class Player(Agent):
 
 	# public variables
 	currPath = []
-	searchType = SearchType.BREADTH_FIRST
+	searchType = SearchType.DJIKSTRA
 
 	# Moves dog agent along generated path and changes path-finding
 	# algorithm according to user input.

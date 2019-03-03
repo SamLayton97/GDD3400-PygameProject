@@ -28,9 +28,6 @@
     <Compile Include="Constants.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Dog.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DrawableObject.py">
       <SubType>Code</SubType>
     </Compile>

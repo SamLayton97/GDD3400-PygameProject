@@ -11,6 +11,7 @@ class Sheep(Agent):
 
 	# public variables
 	fleePoint = Vector(0, 0)
+	dogPosition = Vector(0, 0)
 	closestBoundPoint = Vector(0, 0)
 	neighbors = []
 	herd = []
@@ -18,7 +19,7 @@ class Sheep(Agent):
 	# Constructor:
 	# Initialize all base Agent variables and then
 	# set sheep to start with random velocity between -.5 and 5
-	def __init__(self, position, size, maxSpeed, color, surface):
+	def __init__(self, surface, position, size, color, maxSpeed, angularSpeed):
 		# randomize sheep's starting velocity so that at least one component isn't 0
 		velocityX = 0
 		velocityY = 0
@@ -29,19 +30,19 @@ class Sheep(Agent):
 		self.velocity = randVector.normalize()
 		
 		# initialize base agent variables
-		super().__init__(position, size, maxSpeed, color, surface)
+		super().__init__(surface, position, size, color, maxSpeed, angularSpeed)
 
 		# rotate sheep to face randomized starting velocity and update collision box
 		self.faceVelocity()
 
 	# Draws vision-detection line on top of drawing itself and its vector line
-	def draw(self, screen, dog):
+	def draw(self, screen):
 		# for debugging: draw line from sheep to dog's center if distance between them is less than attack range
 		if Constants.DEBUG_DOG_INFLUENCE:
-			distanceVector = self.position - dog.position
-			if distanceVector.length() < Constants.ATTACK_RANGE:
+			distanceVector = self.objectCenter - self.dogPosition
+			if distanceVector.length() < Constants.MIN_ATTACK_DIST:
 				pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.x, self.objectCenter.y),
-						(dog.objectCenter.x, dog.objectCenter.y), Constants.DEBUG_LINE_WIDTH)
+						(self.dogPosition.x, self.dogPosition.y), Constants.DEBUG_LINE_WIDTH)
 
 		# for debugging: draw line to each sheep in list of neighbors
 		if Constants.DEBUG_NEIGHBORS:
@@ -50,7 +51,7 @@ class Sheep(Agent):
 						(sheep.objectCenter.x, sheep.objectCenter.y), Constants.DEBUG_LINE_WIDTH)
 
 		# for debugging: draw line to closest boundary point (only if agent is close enough for bounds to influence agent's velocity)
-		if Constants.DEBUG_BOUNDARY_INFLUENCE and not (self.closestBoundPoint.x == self.objectCenter.x and self.closestBoundPoint.y == self.objectCenter.y):
+		if Constants.DEBUG_BOUNDARIES and not (self.closestBoundPoint.x == self.objectCenter.x and self.closestBoundPoint.y == self.objectCenter.y):
 			pygame.draw.line(screen, pygame.Color(255, 0, 255), (self.objectCenter.x, self.objectCenter.y),
 					(self.closestBoundPoint.x, self.closestBoundPoint.y), Constants.DEBUG_LINE_WIDTH)
 
@@ -58,9 +59,12 @@ class Sheep(Agent):
 		super().draw(screen)
 
 	# Updates sheep's position, running from player-dog if within run range
-	def update(self, dog, worldBounds):
+	def update(self, worldBounds, graph, dog, herd, gates):
 		# find neighbors within herd
 		self.findNeighbors(self.herd)
+
+		# update position of dog
+		self.dogPosition = dog.objectCenter
 
 		# calculate each force affecting sheep
 		alignmentInfluence = self.calculateAlignment()
@@ -71,7 +75,7 @@ class Sheep(Agent):
 
 		# combine individual forces into composite force
 		forces = (alignmentInfluence.scale(Constants.SHEEP_ALIGNMENT_WEIGHT) + cohesionInfluence.scale(Constants.SHEEP_COHESION_WEIGHT) + 
-			dogInfluence.scale(Constants.SHEEP_DOG_INFLUENCE_WEIGHT)) + separationInfluence.scale(Constants.SHEEP_SEPERATION_WEIGHT) + boundsInfluence.scale(Constants.SHEEP_BOUNDARY_INFLUENCE_WEIGHT)
+			dogInfluence.scale(Constants.SHEEP_DOG_INFLUENCE_WEIGHT)) + separationInfluence.scale(Constants.SHEEP_SEPARATION_WEIGHT) + boundsInfluence.scale(Constants.SHEEP_BOUNDARY_INFLUENCE_WEIGHT)
 
 		# if external forces influence velocity of sheep
 		if not (forces.x == 0 and forces.y == 0):
@@ -84,7 +88,7 @@ class Sheep(Agent):
 		else:
 			self.currSpeed = 0
 
-		super().update(dog, worldBounds)
+		super().update(worldBounds)
 
 	# Calculates influence force of dog's proximity on sheep's velocity
 	# and returns velocity moving away from the dog
@@ -93,7 +97,7 @@ class Sheep(Agent):
 		dogInfluence = Vector(0, 0)
 
 		# if the dog is within attack range
-		if self.distanceToOther(dog) < Constants.ATTACK_RANGE:
+		if self.distanceToOther(dog) < Constants.MIN_ATTACK_DIST:
 			# calculate vector away from dog
 			dogInfluence = self.objectCenter - dog.objectCenter
 			dogInfluence.normalize()

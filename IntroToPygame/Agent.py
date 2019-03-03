@@ -25,7 +25,7 @@ class Agent:
 	# Constructor:
 	# Initializes agent's values to corresponding parameters and 
 	# initializes their velocity and center from that.
-	def __init__(self, position, size, maxSpeed, color, surface):
+	def __init__(self, surface, position, size, color, maxSpeed, angularSpeed):
 		# set variables to appropriate parameters
 		self.position = position
 		self.size = Vector(size.x, size.y)
@@ -48,7 +48,7 @@ class Agent:
 		return stringSize + stringPosition + stringVelocity + stringCenter
 
 	# Updates agent's position and collision box
-	def update(self, target, worldBounds):
+	def update(self, worldBounds):
 		# calculate displacement of agent between frames
 		displacementVector = self.velocity.scale(self.currSpeed)
 
@@ -58,10 +58,6 @@ class Agent:
 
 		# rotate agent to face velocity vector
 		self.faceVelocity()
-
-		# update agent's collision box and detect collision
-		#self.updateCollisionBox()
-		self.collisionDetect(target)
 
 	# Moves object by displacement vector
 	def movePosition(self, displacementVector):

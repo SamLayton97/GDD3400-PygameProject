@@ -9,7 +9,7 @@ class Player(Agent):
 
 	# Moves player-object in response to player-input (WASD),
 	# and updates velocity vector accordingly
-	def update(self, target, worldBounds):
+	def update(self, worldBounds, graph, herd, gates):
 		# determine un-normalized movement vector according to player-input
 		xInput = 0
 		yInput = 0
@@ -31,7 +31,7 @@ class Player(Agent):
 			# update velocity and move player
 			movementVector = Vector(xInput, yInput)
 			self.velocity = movementVector.normalize()
-			super().update(target, worldBounds)
+			super().update(worldBounds)
 		# otherwise, freeze movement by halting speed
 		else:
 			self.currSpeed = 0

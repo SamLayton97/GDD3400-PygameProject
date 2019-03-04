@@ -55,6 +55,12 @@ class Sheep(Agent):
 			pygame.draw.line(screen, pygame.Color(255, 0, 255), (self.center.x, self.center.y),
 					(self.closestBoundPoint.x, self.closestBoundPoint.y), Constants.DEBUG_LINE_WIDTH)
 
+		# for debugging: draw lines to each obstacle in list of nearby obstacles
+		if Constants.DEBUG_OBSTACLES:
+			for obstacle in self.nearbyObstacles:
+				pygame.draw.line(screen, pygame.Color(255, 0, 255), (self.center.x, self.center.y),
+					 (obstacle.center.x, obstacle.center.y), Constants.DEBUG_LINE_WIDTH)
+
 		# draw self and vector line
 		super().draw(screen)
 
@@ -73,10 +79,12 @@ class Sheep(Agent):
 		separationInfluence = self.calculateSeparation()
 		dogInfluence = self.calculateDogInfluence(dog)
 		boundsInfluence = self.calculateBoundaryInfluence(worldBounds)
+		obstaclesInfluence = self.calculateObstacleInfluence()
 
 		# combine individual forces into composite force
-		forces = (alignmentInfluence.scale(Constants.SHEEP_ALIGNMENT_WEIGHT) + cohesionInfluence.scale(Constants.SHEEP_COHESION_WEIGHT) + 
-			dogInfluence.scale(Constants.SHEEP_DOG_INFLUENCE_WEIGHT)) + separationInfluence.scale(Constants.SHEEP_SEPARATION_WEIGHT) + boundsInfluence.scale(Constants.SHEEP_BOUNDARY_INFLUENCE_WEIGHT)
+		forces = (alignmentInfluence.scale(Constants.SHEEP_ALIGNMENT_WEIGHT) + cohesionInfluence.scale(Constants.SHEEP_COHESION_WEIGHT) + \
+			dogInfluence.scale(Constants.SHEEP_DOG_INFLUENCE_WEIGHT)) + separationInfluence.scale(Constants.SHEEP_SEPARATION_WEIGHT) + \
+			boundsInfluence.scale(Constants.SHEEP_BOUNDARY_INFLUENCE_WEIGHT) + obstaclesInfluence.scale(Constants.SHEEP_OBSTACLE_INFLUENCE_WEIGHT)
 
 		# if external forces influence velocity of sheep
 		if not (forces.x == 0 and forces.y == 0):
@@ -145,6 +153,23 @@ class Sheep(Agent):
 			if self.distanceToOther(obstacle) < Constants.SHEEP_OBSTACLE_RADIUS:
 				# add current obstacle to list of nearby obstacles
 				self.nearbyObstacles.append(obstacle)
+	
+	# Calculates vector of force moving away from nearby obstacles.
+	def calculateObstacleInfluence(self):
+		# define vector to keep track of nearby obstacle positions
+		obstaclesInfluence = Vector(0, 0)
+		obstacleCount = len(self.nearbyObstacles)
+
+		# iterate over each nearby obstacle and add distance from self to it to composite vector
+		for obstacle in self.nearbyObstacles:
+			obstaclesInfluence += obstacle.center - self.center
+
+		# if number of obstacles wasn't 0, calculate and normalize vector away from obstacles' center of mass
+		if obstacleCount > 0:
+			obstaclesInfluence = obstaclesInfluence.scale(-1 / obstacleCount)
+			obstaclesInfluence = obstaclesInfluence.normalize()
+
+		return obstaclesInfluence
 
 	# From a list of sheep, determine which ones are neighbors
 	def findNeighbors(self, herd):

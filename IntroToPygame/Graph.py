@@ -195,7 +195,17 @@ class Graph():
 		print("A_STAR")
 		self.reset()
 
-		# TODO: Add your A-star code here!
+		# create priority queue of nodes
+		aStarQueue = []
+
+		# add/'visit' starting node and assign its initial cost(s)
+		aStarQueue.append(start)
+		start.isVisited = True
+		start.costFromStart = 0
+		fromStartToEnd = end.center - start.center
+		start.costToEnd = fromStartToEnd.length() / Constants.GRID_SIZE
+		start.cost = start.costFromStart + start.costToEnd
+
 
 		return []
 

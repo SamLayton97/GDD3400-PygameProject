@@ -22,12 +22,12 @@ class Player(Agent):
 		pressed = pygame.key.get_pressed()
 		if pressed[K_a]:
 			self.searchType = SearchType.A_STAR
-		elif pressed[K_s]:
-			self.searchType = SearchType.BEST_FIRST
 			# DEBUGGING: find path from two random points on grid
 			debugStart = graph.nodes[random.randint(0, graph.gridHeight - 1)][random.randint(0, graph.gridWidth - 1)]
 			debugEnd = graph.nodes[random.randint(0, graph.gridHeight - 1)][random.randint(0, graph.gridWidth - 1)]
-			graph.findPath_BestFirst(debugStart, debugEnd)
+			graph.findPath_AStar(debugStart, debugEnd)
+		elif pressed[K_s]:
+			self.searchType = SearchType.BEST_FIRST
 		elif pressed[K_d]:
 			self.searchType = SearchType.DJIKSTRA
 		elif pressed[K_f]:

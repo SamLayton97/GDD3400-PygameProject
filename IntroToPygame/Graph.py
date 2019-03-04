@@ -167,7 +167,7 @@ class Graph():
 			for currNeighbor in currNode.neighbors:
 				# if current neighbor wasn't visited yet
 				if not currNeighbor.isVisited:
-					# 'visit' node / push it onto queue
+					# 'visit' node / push it onto queue and set back node
 					djikstraQueue.append(currNeighbor)
 					currNeighbor.isVisited = True
 					currNeighbor.backNode = currNode
@@ -222,6 +222,22 @@ class Graph():
 			# if current node is goal, build and return path from it
 			if currNode == end:
 				return self.buildPath(currNode)
+
+			# iterate over neighboring nodes
+			for currNeighbor in currNode.neighbors:
+				# if current node wasn't visited yet
+				if not currNeighbor.isVisited:
+					# 'visit' node/push it onto queue and set back node
+					bestFirstQueue.append(currNeighbor)
+					currNeighbor.isVisited = True
+					currNeighbor.backNode = currNode
+
+					# calculate and set cost from this node to end
+					fromNeighborToEnd = end.center - currNeighbor.center
+					currNeighbor.cost = fromNeighborToEnd.length() / Constants.GRID_SIZE
+				
+			# re-sort priority queue from lowest to highest cost
+			bestFirstQueue.sort(key=lambda x: x.cost)
 
 		# if no path was found, return empty list
 		return []

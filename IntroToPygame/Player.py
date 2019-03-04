@@ -37,8 +37,8 @@ class Player(Agent):
 		# if dog has no path to follow
 		if not self.currPath:
 			# find node closest agent's position [start node] and sheep's position [end node]
-			dogNode = graph.getNodeFromPoint(self.objectCenter)
-			sheepNode = graph.getNodeFromPoint(herd[0].objectCenter)
+			dogNode = graph.getNodeFromPoint(self.center)
+			sheepNode = graph.getNodeFromPoint(herd[0].center)
 
 			# generate new path according to chosen pathfinding algorithm
 			if self.searchType == SearchType.BREADTH_FIRST:
@@ -52,12 +52,12 @@ class Player(Agent):
 		# if agent does have path to follow
 		else:
 			# aim agent's velocity towards next node
-			nextNodeVector = self.currPath[0].center - self.objectCenter
+			nextNodeVector = self.currPath[0].center - self.center
 			self.velocity = nextNodeVector.normalize()
 			self.currSpeed = self.maxSpeed
 
 			# if agent is close to next node they're travelling to
-			nodeProximityVector = self.currPath[0].center - self.objectCenter
+			nodeProximityVector = self.currPath[0].center - self.center
 			if nodeProximityVector.length() < Constants.GRID_SIZE:
 				# pop node from list
 				self.currPath.pop(0)

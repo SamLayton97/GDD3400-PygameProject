@@ -15,8 +15,8 @@ class Enemy(Agent):
 	def draw(self, screen):
 		# for debugging: draw line from enemy's center to target's center if following target
 		if self.velocity.x != 0 or self.velocity.y != 0:
-			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.x, self.objectCenter.y),
-					(self.interceptPoint.x + self.objectCenter.x, self.interceptPoint.y + self.objectCenter.y), 3)
+			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.center.x, self.center.y),
+					(self.interceptPoint.x + self.center.x, self.interceptPoint.y + self.center.y), 3)
 
 		# draw self and vector line
 		super().draw(screen)

@@ -14,7 +14,7 @@ class Sheep(Agent):
 	dogPosition = Vector(0, 0)
 	closestBoundPoint = Vector(0, 0)
 	neighbors = []
-	herd = []
+	nearbyObstacles = []
 
 	# Constructor:
 	# Initialize all base Agent variables and then
@@ -39,20 +39,20 @@ class Sheep(Agent):
 	def draw(self, screen):
 		# for debugging: draw line from sheep to dog's center if distance between them is less than attack range
 		if Constants.DEBUG_DOG_INFLUENCE:
-			distanceVector = self.objectCenter - self.dogPosition
+			distanceVector = self.center - self.dogPosition
 			if distanceVector.length() < Constants.MIN_ATTACK_DIST:
-				pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.x, self.objectCenter.y),
+				pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.center.x, self.center.y),
 						(self.dogPosition.x, self.dogPosition.y), Constants.DEBUG_LINE_WIDTH)
 
 		# for debugging: draw line to each sheep in list of neighbors
 		if Constants.DEBUG_NEIGHBORS:
 			for sheep in self.neighbors:
-				pygame.draw.line(screen, pygame.Color(0, 0, 255), (self.objectCenter.x, self.objectCenter.y),
-						(sheep.objectCenter.x, sheep.objectCenter.y), Constants.DEBUG_LINE_WIDTH)
+				pygame.draw.line(screen, pygame.Color(0, 0, 255), (self.center.x, self.center.y),
+						(sheep.center.x, sheep.center.y), Constants.DEBUG_LINE_WIDTH)
 
 		# for debugging: draw line to closest boundary point (only if agent is close enough for bounds to influence agent's velocity)
-		if Constants.DEBUG_BOUNDARIES and not (self.closestBoundPoint.x == self.objectCenter.x and self.closestBoundPoint.y == self.objectCenter.y):
-			pygame.draw.line(screen, pygame.Color(255, 0, 255), (self.objectCenter.x, self.objectCenter.y),
+		if Constants.DEBUG_BOUNDARIES and not (self.closestBoundPoint.x == self.center.x and self.closestBoundPoint.y == self.center.y):
+			pygame.draw.line(screen, pygame.Color(255, 0, 255), (self.center.x, self.center.y),
 					(self.closestBoundPoint.x, self.closestBoundPoint.y), Constants.DEBUG_LINE_WIDTH)
 
 		# draw self and vector line
@@ -60,11 +60,12 @@ class Sheep(Agent):
 
 	# Updates sheep's position, running from player-dog if within run range
 	def update(self, worldBounds, graph, dog, herd, gates):
-		# find neighbors within herd
-		self.findNeighbors(self.herd)
+		# find neighboring sheep and nearby obstacles
+		self.findNeighbors(herd)
+		self.findNearbyObstacles(graph.obstacles)
 
 		# update position of dog
-		self.dogPosition = dog.objectCenter
+		self.dogPosition = dog.center
 
 		# calculate each force affecting sheep
 		alignmentInfluence = self.calculateAlignment()
@@ -99,7 +100,7 @@ class Sheep(Agent):
 		# if the dog is within attack range
 		if self.distanceToOther(dog) < Constants.MIN_ATTACK_DIST:
 			# calculate vector away from dog
-			dogInfluence = self.objectCenter - dog.objectCenter
+			dogInfluence = self.center - dog.center
 			dogInfluence.normalize()
 
 		# return normalized dog-influence vector
@@ -112,19 +113,19 @@ class Sheep(Agent):
 		boundsInfluence = Vector(0, 0)
 
 		# if sheep nears left/right boundaries, calculate vector directly away from those boundaries
-		if self.objectCenter.x < Constants.SHEEP_BOUNDARY_RADIUS:
-			boundsInfluence.x += self.objectCenter.x
-		elif self.objectCenter.x > worldBounds.x - Constants.SHEEP_BOUNDARY_RADIUS:
-			boundsInfluence.x += self.objectCenter.x - worldBounds.x
+		if self.center.x < Constants.SHEEP_BOUNDARY_RADIUS:
+			boundsInfluence.x += self.center.x
+		elif self.center.x > worldBounds.x - Constants.SHEEP_BOUNDARY_RADIUS:
+			boundsInfluence.x += self.center.x - worldBounds.x
 
 		# if sheep nears top/bottom boundardies, calculate vector directly away from those boundaries
-		if (self.objectCenter.y < Constants.SHEEP_BOUNDARY_RADIUS):
-			boundsInfluence.y += self.objectCenter.y
-		elif self.objectCenter.y > worldBounds.y - Constants.SHEEP_BOUNDARY_RADIUS:
-			boundsInfluence.y += self.objectCenter.y - worldBounds.y
+		if (self.center.y < Constants.SHEEP_BOUNDARY_RADIUS):
+			boundsInfluence.y += self.center.y
+		elif self.center.y > worldBounds.y - Constants.SHEEP_BOUNDARY_RADIUS:
+			boundsInfluence.y += self.center.y - worldBounds.y
 
 		# update agent's closest bound point
-		self.closestBoundPoint = self.objectCenter - boundsInfluence
+		self.closestBoundPoint = self.center - boundsInfluence
 
 		# if bounds influence is not zero vector, normalize it
 		if not (boundsInfluence.x == 0 and boundsInfluence.x == 0):
@@ -133,7 +134,18 @@ class Sheep(Agent):
 		# return bounds influence
 		return boundsInfluence
 
-	# from a list of sheep, determine which ones are neighbors
+	# From a set of obstacles on the map, find ones which are near this agent.
+	def findNearbyObstacles(self, obstacles):
+		# clear list of nearby obstacles
+		self.nearbyObstacles.clear()
+
+		# iterate over every obstacle in obstacle set
+		#for obstacle in obstacles:
+			# if obstacle is within 'nearby obstacle' radius
+
+		return []
+
+	# From a list of sheep, determine which ones are neighbors
 	def findNeighbors(self, herd):
 		# clear list of neighbors
 		self.neighbors.clear()
@@ -174,7 +186,7 @@ class Sheep(Agent):
 
 		# iterate over each sheep and add distance from self to it to composite cohesion vector
 		for currSheep in self.neighbors:
-			cohesion += currSheep.objectCenter - self.objectCenter
+			cohesion += currSheep.center - self.center
 
 		# if number of neighbors wasn't 0, calculate and normalize vector to neighborhood center of mass
 		if neighborCount > 0:
@@ -193,7 +205,7 @@ class Sheep(Agent):
 
 		# iterate over each neighboring sheep and add distance from self to it to composite separation vector
 		for currSheep in self.neighbors:
-			separation += currSheep.objectCenter - self.objectCenter
+			separation += currSheep.center - self.center
 
 		# if number of neighbors wasn't 0, calculate and normalize vector away from neighborhood center of mass
 		if neighborCount > 0:

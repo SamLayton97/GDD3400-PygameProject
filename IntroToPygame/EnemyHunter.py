@@ -15,7 +15,7 @@ class EnemyHunter(Agent):
 	def draw(self, screen):
 		# for debugging: draw line from enemy's center to where target is moving
 		if self.velocity.x != 0 or self.velocity.y != 0:
-			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.objectCenter.x, self.objectCenter.y),
+			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.center.x, self.center.y),
 					(self.interceptPoint.x, self.interceptPoint.y), 3)
 
 		# draw self and vector line
@@ -32,7 +32,7 @@ class EnemyHunter(Agent):
 			# estimate where target will be after t time
 			timeToIntercept = distToTarget / self.speed
 			targetTravelDist = timeToIntercept * target.speed
-			self.interceptPoint = target.velocity.scale(targetTravelDist) + target.objectCenter
+			self.interceptPoint = target.velocity.scale(targetTravelDist) + target.center
 
 			# move agent in direction of / away from intercept point
 			if self.isIt:

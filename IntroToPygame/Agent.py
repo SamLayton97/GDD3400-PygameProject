@@ -10,7 +10,7 @@ class Agent:
 
 	# public variables
 	position = Vector(0, 0)			# top left corner of object
-	objectCenter = Vector(0, 0)		# center of object
+	center = Vector(0, 0)		# center of object
 	velocity = Vector(0, 0)
 	size = Vector(0, 0)
 	currSpeed = 0
@@ -35,7 +35,7 @@ class Agent:
 		self.surface = surface
 
 		# calculate agent's center and collision box
-		self.objectCenter = self.position + self.size.scale(0.5)
+		self.center = self.position + self.size.scale(0.5)
 		self.updateCollisionBox()
 
 	# Prints agent's size, position, velocity, and
@@ -44,7 +44,7 @@ class Agent:
 		stringSize = "Size: " + str(self.size) + "\n"
 		stringPosition = "Position: (" + str(self.position.x) + ", " + str(self.position.y) + ")\n"
 		stringVelocity = "Velocity: (" + str(self.velocity.x) + ", " + str(self.velocity.y) + ")\n"
-		stringCenter = "Center: (" + str(self.objectCenter.x) + ", " + str(self.objectCenter.y) + ")\n"
+		stringCenter = "Center: (" + str(self.center.x) + ", " + str(self.center.y) + ")\n"
 		return stringSize + stringPosition + stringVelocity + stringCenter
 
 	# Updates agent's position and collision box
@@ -67,8 +67,8 @@ class Agent:
 	# Clamps future position to within world's bounds
 	def clampPosition(self, worldBounds, displacementVector):
 		# ignoring world bounds, calculate future position of agent after displacement
-		futureX = displacementVector.x + self.objectCenter.x
-		futureY = displacementVector.y + self.objectCenter.y
+		futureX = displacementVector.x + self.center.x
+		futureY = displacementVector.y + self.center.y
 
 		# if future position exceeds world bounds, clamp displacement
 		if (futureX < self.surface.get_width() / 2) or (futureX > worldBounds.x - self.surface.get_width() / 2):
@@ -86,7 +86,7 @@ class Agent:
 
 		# update collision box and object's center to match new rotated surface
 		self.updateCollisionBox()
-		self.objectCenter = self.position + Vector(self.surface.get_width() / 2, self.surface.get_height() / 2)
+		self.center = self.position + Vector(self.surface.get_width() / 2, self.surface.get_height() / 2)
 
 	# Rotates agent's sprite to face direction of velocity vector
 	def faceVelocity(self):
@@ -96,7 +96,7 @@ class Agent:
 
 	# Calculates distance to other agent
 	def distanceToOther(self, other):
-		distanceVector = other.objectCenter - self.objectCenter
+		distanceVector = other.center - self.center
 		return distanceVector.length()
 
 	# Updates collision box according to bounding box of agent's sprite
@@ -128,5 +128,5 @@ class Agent:
 		# for debugging: draw line pointing in direction of agent's velocity
 		if Constants.DEBUG_VELOCITY:
 			drawVector = self.velocity.scale(30)
-			pygame.draw.line(screen, pygame.Color(0, 255, 0, 255), (self.objectCenter.x, self.objectCenter.y), 
-					   (self.objectCenter.x + drawVector.x, self.objectCenter.y + drawVector.y), Constants.DEBUG_LINE_WIDTH)
+			pygame.draw.line(screen, pygame.Color(0, 255, 0, 255), (self.center.x, self.center.y), 
+					   (self.center.x + drawVector.x, self.center.y + drawVector.y), Constants.DEBUG_LINE_WIDTH)

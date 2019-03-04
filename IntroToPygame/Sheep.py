@@ -14,7 +14,6 @@ class Sheep(Agent):
 	dogPosition = Vector(0, 0)
 	closestBoundPoint = Vector(0, 0)
 	neighbors = []
-	herd = []
 
 	# Constructor:
 	# Initialize all base Agent variables and then
@@ -60,16 +59,16 @@ class Sheep(Agent):
 
 	# Updates sheep's position, running from player-dog if within run range
 	def update(self, worldBounds, graph, dog, herd, gates):
-		# find neighbors within herd
-		self.findNeighbors(self.herd)
+		# find neighboring sheep and nearby obstacles
+		myNeighbors = self.findNeighbors(herd)
 
 		# update position of dog
 		self.dogPosition = dog.objectCenter
 
 		# calculate each force affecting sheep
-		alignmentInfluence = self.calculateAlignment()
-		cohesionInfluence = self.calculateCohesion()
-		separationInfluence = self.calculateSeparation()
+		alignmentInfluence = self.calculateAlignment(myNeighbors)
+		cohesionInfluence = self.calculateCohesion(myNeighbors)
+		separationInfluence = self.calculateSeparation(myNeighbors)
 		dogInfluence = self.calculateDogInfluence(dog)
 		boundsInfluence = self.calculateBoundaryInfluence(worldBounds)
 
@@ -135,8 +134,8 @@ class Sheep(Agent):
 
 	# from a list of sheep, determine which ones are neighbors
 	def findNeighbors(self, herd):
-		# clear list of neighbors
-		self.neighbors.clear()
+		# create list of neighbors
+		neighbors = []
 
 		# iterate over every sheep in herd
 		for sheep in herd:
@@ -144,17 +143,20 @@ class Sheep(Agent):
 			# and distance to current sheep is within neighbor radius
 			if sheep != self and self.distanceToOther(sheep) < Constants.SHEEP_NEIGHBOR_RADIUS:
 				# add current sheep to list of neighbors
-				self.neighbors.append(sheep)
+				neighbors.append(sheep)
+
+		# return list of neighboring sheep
+		return neighbors
 
 	# Calculates alignment influence where this sheep wants to move in same direction as its neighbors.
 	# Note: First aspect of flocking behavior.
-	def calculateAlignment(self):
+	def calculateAlignment(self, neighbors):
 		# define vector to keep track of neighbor velocities
 		alignment = Vector(0, 0)
-		neighborCount = len(self.neighbors)
+		neighborCount = len(neighbors)
 
 		# iterate over each sheep and add its velocity to composite alignment velocity
-		for currSheep in self.neighbors:
+		for currSheep in neighbors:
 			alignment += currSheep.velocity
 
 		# if the number of neighbors wasn't 0, normalize alignment vector
@@ -167,13 +169,13 @@ class Sheep(Agent):
 
 	# Calculates cohesion influence where this sheep likes to cluster with other sheep.
 	# Note: Second aspect of flocking behavior.
-	def calculateCohesion(self):
+	def calculateCohesion(self, neighbors):
 		# define vector to keep track of neighbor positions
 		cohesion = Vector(0, 0)
-		neighborCount = len(self.neighbors)
+		neighborCount = len(neighbors)
 
 		# iterate over each sheep and add distance from self to it to composite cohesion vector
-		for currSheep in self.neighbors:
+		for currSheep in neighbors:
 			cohesion += currSheep.objectCenter - self.objectCenter
 
 		# if number of neighbors wasn't 0, calculate and normalize vector to neighborhood center of mass
@@ -186,13 +188,13 @@ class Sheep(Agent):
 
 	# Calculates separation influence where this sheep likes to stay a sheep's length away from its neighbors.
 	# Note: Third aspect of flocking behavior.
-	def calculateSeparation(self):
+	def calculateSeparation(self, neighbors):
 		# define vector to track neighbors' positions
 		separation = Vector(0, 0)
-		neighborCount = len(self.neighbors)
+		neighborCount = len(neighbors)
 
 		# iterate over each neighboring sheep and add distance from self to it to composite separation vector
-		for currSheep in self.neighbors:
+		for currSheep in neighbors:
 			separation += currSheep.objectCenter - self.objectCenter
 
 		# if number of neighbors wasn't 0, calculate and normalize vector away from neighborhood center of mass

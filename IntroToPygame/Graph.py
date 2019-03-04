@@ -137,23 +137,26 @@ class Graph():
 					if currNeighbor == end:
 						return self.buildPath(currNeighbor)
 
+		# if no path was found, return empty list
+		return []
+
 	def findPath_Djikstra(self, start, end):
 		""" Djikstra's Search """
 		print("DJIKSTRA")
 		self.reset()		
 
 		# create priority queue of nodes
-		priorityQueue = []
+		djikstraQueue = []
 
-		# add/'visit' starting node and set its cost to 0
-		priorityQueue.append(start)
+		# add/'visit' starting node and assign its starting cost
+		djikstraQueue.append(start)
 		start.isVisited = True
 		start.cost = 0
 
 		# while there are node in queue to explore (i.e., while path could still exist)
-		while priorityQueue:
+		while djikstraQueue:
 			# remove first node from queue
-			currNode = priorityQueue.pop(0)
+			currNode = djikstraQueue.pop(0)
 			currNode.isExplored = True
 
 			# if current node is goal, return path from it
@@ -165,7 +168,7 @@ class Graph():
 				# if current neighbor wasn't visited yet
 				if not currNeighbor.isVisited:
 					# 'visit' node / push it onto queue
-					priorityQueue.append(currNeighbor)
+					djikstraQueue.append(currNeighbor)
 					currNeighbor.isVisited = True
 					currNeighbor.backNode = currNode
 
@@ -181,7 +184,10 @@ class Graph():
 						currNeighbor.cost = newCost
 
 			# re-sort priority queue from lowest to highest cost
-			priorityQueue.sort(key=lambda x: x.cost)
+			djikstraQueue.sort(key=lambda x: x.cost)
+
+		# if no path was found, return empty list
+		return []
 
 
 	def findPath_AStar(self, start, end):
@@ -198,8 +204,26 @@ class Graph():
 		print("BEST_FIRST")
 		self.reset()
 
-		# TODO: Add your Best-first code here!
+		# create priority queue of nodes to visit and explore
+		bestFirstQueue = []
 
+		# add/'visit' start node and assign its starting cost
+		bestFirstQueue.append(start)
+		start.isVisited = True
+		fromStartToEnd = end.center - start.center
+		start.cost = fromStartToEnd.length() / Constants.GRID_SIZE
+
+		# while there are node in queue to explore (i.e., while path could still exist)
+		while bestFirstQueue:
+			# remove first node from queue
+			currNode = bestFirstQueue.pop(0)
+			currNode.isExplored = True
+
+			# if current node is goal, build and return path from it
+			if currNode == end:
+				return self.buildPath(currNode)
+
+		# if no path was found, return empty list
 		return []
 
 	def draw(self, screen):

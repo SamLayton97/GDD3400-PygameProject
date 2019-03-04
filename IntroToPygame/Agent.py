@@ -94,7 +94,8 @@ class Agent:
 		rotationDegrees = math.degrees(rotationRadians)
 		self.rotate(rotationDegrees - 90)
 
-	# Calculates distance to other agent
+	# Calculates distance to other object.
+	# Note: Other object must have 'center' variable for this method to function.
 	def distanceToOther(self, other):
 		distanceVector = other.center - self.center
 		return distanceVector.length()

@@ -140,10 +140,11 @@ class Sheep(Agent):
 		self.nearbyObstacles.clear()
 
 		# iterate over every obstacle in obstacle set
-		#for obstacle in obstacles:
+		for obstacle in obstacles:
 			# if obstacle is within 'nearby obstacle' radius
-
-		return []
+			if self.distanceToOther(obstacle) < Constants.SHEEP_OBSTACLE_RADIUS:
+				# add current obstacle to list of nearby obstacles
+				self.nearbyObstacles.append(obstacle)
 
 	# From a list of sheep, determine which ones are neighbors
 	def findNeighbors(self, herd):

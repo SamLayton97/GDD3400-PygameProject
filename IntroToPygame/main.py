@@ -92,8 +92,8 @@ dog = Player(dogImage, Vector(Constants.WORLD_WIDTH * .5, Constants.WORLD_HEIGHT
 # Setup the sheep (only 1 for now...)
 herd = []
 sheep = Sheep(sheepImage, Vector(randrange(int(bounds.x * .4), int(bounds.x * .6)),
-								  randrange(int(bounds.y * .6), int(bounds.y * .8))), 
-			   Vector(Constants.DOG_WIDTH, Constants.DOG_HEIGHT), (0, 255, 0), Constants.SHEEP_SPEED, Constants.SHEEP_ANGULAR_SPEED)
+									randrange(int(bounds.y * .6), int(bounds.y * .8))), 
+				Vector(Constants.DOG_WIDTH, Constants.DOG_HEIGHT), (0, 255, 0), Constants.SHEEP_SPEED, Constants.SHEEP_ANGULAR_SPEED)
 herd.append(sheep)
 
 # Setup the gates and obstacles

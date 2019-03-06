@@ -28,7 +28,7 @@ class Sheep(Agent):
 			velocityY = random.uniform(-.5, .5)
 		randVector = Vector(velocityX, velocityY)
 		self.velocity = randVector.normalize()
-		
+
 		# initialize base agent variables
 		super().__init__(surface, position, size, color, maxSpeed, angularSpeed)
 

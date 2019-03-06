@@ -12,7 +12,8 @@ class Agent:
 	position = Vector(0, 0)			# top left corner of object
 	center = Vector(0, 0)		# center of object
 	velocity = Vector(0, 0)
-	targetVelocity = Vector(0, 0)	# 'idea' velocity agent moves towards
+	targetVelocity = Vector(0, 0)	# 'ideal' velocity agent moves towards
+	angularSpeed = 0
 	size = Vector(0, 0)
 	currSpeed = 0
 	maxSpeed = 0
@@ -34,6 +35,7 @@ class Agent:
 		self.color = color
 		self.originalSurface = surface
 		self.surface = surface
+		self.angularSpeed = angularSpeed
 
 		# calculate agent's center and collision box
 		self.center = self.position + self.size.scale(0.5)
@@ -50,8 +52,11 @@ class Agent:
 
 	# Updates agent's position and collision box
 	def update(self, worldBounds):
-		# TEMP CODE: set velocity to target velocity
-		self.velocity = self.targetVelocity
+		# find inverse of current velocity
+		inverseVelocity = self.targetVelocity - self.velocity
+
+		# add scaled inverse velocity to current velocity (basic implementation of angular velocity)
+		self.velocity += inverseVelocity.scale(self.angularSpeed)
 
 		# calculate displacement of agent between frames
 		displacementVector = self.velocity.scale(self.currSpeed)

@@ -79,11 +79,17 @@ class Agent:
 		futureX = displacementVector.x + self.center.x
 		futureY = displacementVector.y + self.center.y
 
-		# if future position exceeds world bounds, clamp displacement
-		if (futureX < self.surface.get_width() / 2) or (futureX > worldBounds.x - self.surface.get_width() / 2):
-			displacementVector.x = 0
-		if (futureY < self.surface.get_height() / 2) or (futureY > worldBounds.y - self.surface.get_height() / 2):
-			displacementVector.y = 0
+		# if future x-position exceeds world width, clamp x displacement
+		if (futureX < self.surface.get_width() / 2):
+			displacementVector.x += 5
+		elif (futureX > worldBounds.x - self.surface.get_width() / 2):
+			displacementVector.x -= 5
+
+		# if future y-position exceeds world height, clamp y displacement
+		if (futureY < self.surface.get_height() / 2):
+			displacementVector.y += 5
+		elif (futureY > worldBounds.y - self.surface.get_height() / 2):
+			displacementVector.y -= 5
 
 		# return clamped displacement vector
 		return displacementVector

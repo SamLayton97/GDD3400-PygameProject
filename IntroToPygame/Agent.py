@@ -12,6 +12,7 @@ class Agent:
 	position = Vector(0, 0)			# top left corner of object
 	center = Vector(0, 0)		# center of object
 	velocity = Vector(0, 0)
+	targetVelocity = Vector(0, 0)	# 'idea' velocity agent moves towards
 	size = Vector(0, 0)
 	currSpeed = 0
 	maxSpeed = 0
@@ -49,6 +50,9 @@ class Agent:
 
 	# Updates agent's position and collision box
 	def update(self, worldBounds):
+		# TEMP CODE: set velocity to target velocity
+		self.velocity = self.targetVelocity
+
 		# calculate displacement of agent between frames
 		displacementVector = self.velocity.scale(self.currSpeed)
 

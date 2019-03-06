@@ -11,7 +11,7 @@ class Agent:
 	# public variables
 	position = Vector(0, 0)			# top left corner of object
 	center = Vector(0, 0)		# center of object
-	targetVelocity = Vector(0, 0)
+	velocity = Vector(0, 0)
 	size = Vector(0, 0)
 	currSpeed = 0
 	maxSpeed = 0
@@ -43,14 +43,14 @@ class Agent:
 	def __str__(self):
 		stringSize = "Size: " + str(self.size) + "\n"
 		stringPosition = "Position: (" + str(self.position.x) + ", " + str(self.position.y) + ")\n"
-		stringVelocity = "Velocity: (" + str(self.targetVelocity.x) + ", " + str(self.targetVelocity.y) + ")\n"
+		stringVelocity = "Velocity: (" + str(self.velocity.x) + ", " + str(self.velocity.y) + ")\n"
 		stringCenter = "Center: (" + str(self.center.x) + ", " + str(self.center.y) + ")\n"
 		return stringSize + stringPosition + stringVelocity + stringCenter
 
 	# Updates agent's position and collision box
 	def update(self, worldBounds):
 		# calculate displacement of agent between frames
-		displacementVector = self.targetVelocity.scale(self.currSpeed)
+		displacementVector = self.velocity.scale(self.currSpeed)
 
 		# clamp and update agent's position
 		displacementVector = self.clampPosition(worldBounds, displacementVector)
@@ -90,7 +90,7 @@ class Agent:
 
 	# Rotates agent's sprite to face direction of velocity vector
 	def faceVelocity(self):
-		rotationRadians = math.atan2(-self.targetVelocity.y, self.targetVelocity.x)
+		rotationRadians = math.atan2(-self.velocity.y, self.velocity.x)
 		rotationDegrees = math.degrees(rotationRadians)
 		self.rotate(rotationDegrees - 90)
 
@@ -128,6 +128,6 @@ class Agent:
 
 		# for debugging: draw line pointing in direction of agent's velocity
 		if Constants.DEBUG_VELOCITY:
-			drawVector = self.targetVelocity.scale(30)
+			drawVector = self.velocity.scale(30)
 			pygame.draw.line(screen, pygame.Color(0, 255, 0, 255), (self.center.x, self.center.y), 
 					   (self.center.x + drawVector.x, self.center.y + drawVector.y), Constants.DEBUG_LINE_WIDTH)

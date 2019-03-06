@@ -53,7 +53,7 @@ class Player(Agent):
 		else:
 			# aim agent's velocity towards next node
 			nextNodeVector = self.currPath[0].center - self.center
-			self.targetVelocity = nextNodeVector.normalize()
+			self.velocity = nextNodeVector.normalize()
 			self.currSpeed = self.maxSpeed
 
 			# if agent is close to next node they're travelling to

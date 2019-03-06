@@ -14,7 +14,7 @@ class EnemyHunter(Agent):
 	# Draws vision-detection line on top of drawing itself and its vector line
 	def draw(self, screen):
 		# for debugging: draw line from enemy's center to where target is moving
-		if self.targetVelocity.x != 0 or self.targetVelocity.y != 0:
+		if self.velocity.x != 0 or self.velocity.y != 0:
 			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.center.x, self.center.y),
 					(self.interceptPoint.x, self.interceptPoint.y), 3)
 
@@ -32,14 +32,14 @@ class EnemyHunter(Agent):
 			# estimate where target will be after t time
 			timeToIntercept = distToTarget / self.speed
 			targetTravelDist = timeToIntercept * target.speed
-			self.interceptPoint = target.targetVelocity.scale(targetTravelDist) + target.center
+			self.interceptPoint = target.velocity.scale(targetTravelDist) + target.center
 
 			# move agent in direction of / away from intercept point
 			if self.isIt:
 				interceptVector = self.interceptPoint - self.position
 			else: 
 				interceptVector = self.position - self.interceptPoint
-			self.targetVelocity = interceptVector.normalize()
+			self.velocity = interceptVector.normalize()
 			super().update(target, worldBounds)
 		else:
-			self.targetVelocity = Vector(0, 0)
+			self.velocity = Vector(0, 0)

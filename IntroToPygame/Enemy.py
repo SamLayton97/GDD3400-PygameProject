@@ -14,7 +14,7 @@ class Enemy(Agent):
 	# Draws vision-detection line on top of drawing itself and its vector line
 	def draw(self, screen):
 		# for debugging: draw line from enemy's center to target's center if following target
-		if self.targetVelocity.x != 0 or self.targetVelocity.y != 0:
+		if self.velocity.x != 0 or self.velocity.y != 0:
 			pygame.draw.line(screen, pygame.Color(255, 0, 0), (self.center.x, self.center.y),
 					(self.interceptPoint.x + self.center.x, self.interceptPoint.y + self.center.y), 3)
 
@@ -33,8 +33,8 @@ class Enemy(Agent):
 
 			# if enemy is fleeing, reverse their velocity
 			if not self.isIt:
-				self.velocity = self.targetVelocity.scale(-1)
+				self.velocity = self.velocity.scale(-1)
 
 			super().update(target, worldBounds)
 		else:
-			self.targetVelocity = Vector(0, 0)
+			self.velocity = Vector(0, 0)

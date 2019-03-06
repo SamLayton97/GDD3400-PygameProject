@@ -27,7 +27,7 @@ class Sheep(Agent):
 			velocityX = random.uniform(-.5, .5)
 			velocityY = random.uniform(-.5, .5)
 		randVector = Vector(velocityX, velocityY)
-		self.targetVelocityelocity = randVector.normalize()
+		self.velocity = randVector.normalize()
 		
 		# initialize base agent variables
 		super().__init__(surface, position, size, color, maxSpeed, angularSpeed)
@@ -92,7 +92,7 @@ class Sheep(Agent):
 			self.currSpeed = self.maxSpeed
 
 			# update velocity to be normalized composite forces vector
-			self.targetVelocity = forces.normalize()
+			self.velocity = forces.normalize()
 		# otherwise, freeze sheep's movement by locking speed
 		else:
 			self.currSpeed = 0
@@ -193,7 +193,7 @@ class Sheep(Agent):
 
 		# iterate over each sheep and add its velocity to composite alignment velocity
 		for currSheep in self.neighbors:
-			alignment += currSheep.targetVelocity
+			alignment += currSheep.velocity
 
 		# if the number of neighbors wasn't 0, normalize alignment vector
 		if neighborCount > 0:

@@ -55,8 +55,13 @@ class Agent:
 		# find inverse of current velocity
 		inverseVelocity = self.targetVelocity - self.velocity
 
-		# add scaled inverse velocity to current velocity (basic implementation of angular velocity)
-		self.velocity += inverseVelocity.scale(self.angularSpeed)
+		# if agent's angular speed is less than length of inverse velocity
+		if self.angularSpeed < inverseVelocity.length():
+			# add scaled inverse velocity to current velocity (basic implementation of angular velocity)
+			self.velocity += inverseVelocity.scale(self.angularSpeed)
+		# otherwise, set velocity to target velocity (don't over-correct agent's turn)
+		else:
+			self.velocity = self.targetVelocity
 
 		# calculate displacement of agent between frames
 		displacementVector = self.velocity.scale(self.currSpeed)

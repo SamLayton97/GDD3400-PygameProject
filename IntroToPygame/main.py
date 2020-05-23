@@ -86,8 +86,8 @@ graph = Graph()
 
 # Setup the dog
 dog = Player(dogImage, Vector(Constants.WORLD_WIDTH * .5, Constants.WORLD_HEIGHT * .5), 
-			 Vector(Constants.DOG_WIDTH, Constants.DOG_HEIGHT), (0, 255, 0), 
-			 Constants.DOG_SPEED, Constants.DOG_ANGULAR_SPEED)
+				Vector(Constants.DOG_WIDTH, Constants.DOG_HEIGHT), (0, 255, 0), 
+				Constants.DOG_SPEED, Constants.DOG_ANGULAR_SPEED)
 
 # Setup the sheep (only 1 for now...)
 herd = []

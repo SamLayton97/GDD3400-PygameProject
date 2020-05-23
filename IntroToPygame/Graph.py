@@ -113,29 +113,31 @@ class Graph():
 		print("BREADTH-FIRST")
 		self.reset()
 
-		# create queue of nodes and add/'visit' starting node
-		searchQueue = []
-		searchQueue.append(start)
+		# create queue of nodes
+		breadthQueue = []
+
+		# add/'visit' starting node
+		breadthQueue.append(start)
 		start.isVisited = True
 
-		# while there are node in queue to explore (i.e., while path could still exist)
-		while searchQueue:
+		# while there are nodes in queue to explore (i.e., while path could still exist)
+		while breadthQueue:
 			# remove first node from queue
-			currNode = searchQueue.pop(0)
-			currNode.isExplored = True
+			curr = breadthQueue.pop(0)
+			curr.isExplored = True
+
+			# if current node is goal, return path from it
+			if curr is end:
+				return self.buildPath(curr)
 
 			# iterate over node's neighbors
-			for currNeighbor in currNode.neighbors:
+			for currNeighbor in curr.neighbors:
 				# if search hasn't visited current neighbor
 				if not currNeighbor.isVisited:
-					# add neighbor to queue (i.e., visit neighbor) and set back pointer to current node
-					searchQueue.append(currNeighbor)
+					# add neightbor to queue (i.e., visit neighbor) and set back pointer to current node
+					breadthQueue.append(currNeighbor)
 					currNeighbor.isVisited = True
-					currNeighbor.backNode = currNode
-
-					# if current neighbor is the goal, build path from said node
-					if currNeighbor == end:
-						return self.buildPath(currNeighbor)
+					currNeighbor.backNode = curr
 
 		# if no path was found, return empty list
 		return []
@@ -151,35 +153,37 @@ class Graph():
 		# add/'visit' starting node and assign its starting cost
 		djikstraQueue.append(start)
 		start.isVisited = True
-		start.cost = 0
 
 		# while there are nodes in queue to explore (i.e., while path could still exist)
 		while djikstraQueue:
 			# remove first node from queue
-			currNode = djikstraQueue.pop(0)
-			currNode.isExplored = True
+			curr = djikstraQueue.pop(0)
+			curr.isExplored = True
 
 			# if current node is goal, return path from it
-			if currNode == end:
-				return self.buildPath(currNode)
+			if curr is end:
+				return self.buildPath(curr)
 
 			# iterate over neighboring nodes
-			for currNeighbor in currNode.neighbors:
+			for currNeighbor in curr.neighbors:
+				# calculate distance from curr to its neighbor
+				toNeighbor = currNeighbor.center - curr.center
+				distToNeighbor = toNeighbor.length()
+
 				# if current neighbor wasn't visited yet
 				if not currNeighbor.isVisited:
 					# 'visit' node / push it onto queue and set back node
 					djikstraQueue.append(currNeighbor)
 					currNeighbor.isVisited = True
-					currNeighbor.backNode = currNode
+					currNeighbor.backNode = curr
 
 					# calculate and set cost to this node
-					fromCurrToNeighbor = currNeighbor.center - currNode.center
-					currNeighbor.cost = currNode.cost + (fromCurrToNeighbor.length() / Constants.GRID_SIZE)
+					currNeighbor.cost = curr.cost + distToNeighbor
+
 				# if current neighbor has been visited
 				else:
 					# update cost if cost from current node is less than existing cost
-					fromCurrToNeighbor = currNeighbor.center - currNode.center
-					newCost = fromCurrToNeighbor.length()
+					newCost = distToNeighbor + curr.cost
 					if newCost < currNeighbor.cost:
 						currNeighbor.cost = newCost
 
@@ -188,7 +192,6 @@ class Graph():
 
 		# if no path was found, return empty list
 		return []
-
 
 	def findPath_AStar(self, start, end):
 		""" A Star Search """
@@ -202,47 +205,40 @@ class Graph():
 		aStarQueue.append(start)
 		start.isVisited = True
 		start.costFromStart = 0
-		fromStartToEnd = end.center - start.center
-		start.costToEnd = fromStartToEnd.length() / Constants.GRID_SIZE
+		start.costToEnd = (end.center - start.center).length()
 		start.cost = start.costFromStart + start.costToEnd
 
 		# while there are nodes in queue to explore (i.e., while path could still exist)
 		while aStarQueue:
 			# remove first node from queue
-			currNode = aStarQueue.pop(0)
-			currNode.isExplored = True
+			curr = aStarQueue.pop(0)
+			curr.isExplored = True
 
 			# if current node is goal, build and return path from it
-			if currNode == end:
-				return self.buildPath(currNode)
+			if curr is end:
+				return self.buildPath(curr)
 
 			# iterate over neighboring nodes
-			for currNeighbor in currNode.neighbors:
+			for currNeighbor in curr.neighbors:
 				# if current neighbor hasn't been visited yet
 				if not currNeighbor.isVisited:
 					# 'visit' node/push it onto queue and set its back node
 					aStarQueue.append(currNeighbor)
 					currNeighbor.isVisited = True
-					currNeighbor.backNode = currNode
+					currNeighbor.backNode = curr
 
-					# calculate actual cost to travel from start to this node
-					fromCurrToNeighbor = currNeighbor.center - currNode.center
-					currNeighbor.costFromStart = currNode.costFromStart + (fromCurrToNeighbor.length() / Constants.GRID_SIZE)
-
-					# calculate estimated cost to travel from this node to end
-					fromNeighborToEnd = end.center - currNeighbor.center
-					currNeighbor.costToEnd = fromNeighborToEnd.length() / Constants.GRID_SIZE
-
-					# set total cost of node
+					# calculate neighbor's travel cost
+					currNeighbor.costFromStart = curr.costFromStart + (currNeighbor.center - curr.center).length()
+					currNeighbor.costToEnd = (end.center - currNeighbor.center).length()
 					currNeighbor.cost = currNeighbor.costFromStart + currNeighbor.costToEnd
+
 				# if current neighbor has been visited
 				else:
 					# reevaluate actual cost to travel to this node, and update cost if necessary
-					fromCurrToNeighbor = currNeighbor.center - currNode.center
-					newActualCost = currNode.costFromStart + (fromCurrToNeighbor.length() / Constants.GRID_SIZE)
+					newActualCost = curr.costFromStart + (currNeighbor.center - curr.center).length()
 					if newActualCost < currNeighbor.costFromStart:
 						currNeighbor.costFromStart = newActualCost
-						currNeighbor.cost = currNeighbor.costFromStart + currNeighbor.costToEnd
+						currNeighbor.cost = newActualCost + currNeighbor.costToEnd
 
 			# re-sort priority queue from lowest to highest cost
 			aStarQueue.sort(key=lambda x: x.cost)
@@ -256,39 +252,37 @@ class Graph():
 		self.reset()
 
 		# create priority queue of nodes to visit and explore
-		bestFirstQueue = []
+		bestQueue = []
 
 		# add/'visit' start node and assign its starting cost
-		bestFirstQueue.append(start)
+		bestQueue.append(start)
 		start.isVisited = True
-		fromStartToEnd = end.center - start.center
-		start.cost = fromStartToEnd.length() / Constants.GRID_SIZE
+		start.cost = (end.center - start.center).length()
 
 		# while there are nodes in queue to explore (i.e., while path could still exist)
-		while bestFirstQueue:
+		while bestQueue:
 			# remove first node from queue
-			currNode = bestFirstQueue.pop(0)
-			currNode.isExplored = True
+			curr = bestQueue.pop(0)
+			curr.isExplored = True
 
 			# if current node is goal, build and return path from it
-			if currNode == end:
-				return self.buildPath(currNode)
+			if curr is end:
+				return self.buildPath(curr)
 
 			# iterate over neighboring nodes
-			for currNeighbor in currNode.neighbors:
+			for currNeighbor in curr.neighbors:
 				# if current neighbor wasn't visited yet
 				if not currNeighbor.isVisited:
 					# 'visit' node/push it onto queue and set back node
-					bestFirstQueue.append(currNeighbor)
+					bestQueue.append(currNeighbor)
 					currNeighbor.isVisited = True
-					currNeighbor.backNode = currNode
+					currNeighbor.backNode = curr
 
 					# calculate and set cost from this node to end
-					fromNeighborToEnd = end.center - currNeighbor.center
-					currNeighbor.cost = fromNeighborToEnd.length() / Constants.GRID_SIZE
-				
+					currNeighbor.cost = (end.center - currNeighbor.center).length()
+					
 			# re-sort priority queue from lowest to highest cost
-			bestFirstQueue.sort(key=lambda x: x.cost)
+			bestQueue.sort(key=lambda x: x.cost)
 
 		# if no path was found, return empty list
 		return []
